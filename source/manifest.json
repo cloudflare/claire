@@ -1,10 +1,15 @@
 {
 	"name": "Claire",
 	"description": "Diagnostic tool for CloudFlare",
-	"version": "0.1",
-	"permissions": ["experimental", "tabs"],
+	"version": "0.2.0",
+	"permissions": ["tabs"],
 	"background_page": "background.html",
 	"page_action": {
 	    "default_icon": "images/orange_cloud.png"
-	}
+	},
+    "content_scripts": [{
+      "matches": ["http://*/*", "https://*/*"],
+      "js" : ["contentscript.js"],
+      "run_at": "document_end"
+    }]
 }
