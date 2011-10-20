@@ -1,0 +1,10 @@
+{
+	"name": "Claire",
+	"description": "Diagnostic tool for CloudFlare",
+	"version": "0.1",
+	"permissions": ["experimental", "tabs"],
+	"background_page": "background.html",
+	"page_action": {
+	    "default_icon": "images/orange_cloud.png"
+	}
+}
