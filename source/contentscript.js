@@ -4,12 +4,10 @@
 var xhr = new XMLHttpRequest();
 xhr.onreadystatechange = function(data) {
     if (xhr.readyState == 4) {
-        if (xhr.status == 200) {
-            chrome.extension.sendRequest(
-                {on_cf: (xhr.getResponseHeader("Server") == "cloudflare-nginx")}, 
-                function(response) {}
-            );
-        }
+        chrome.extension.sendRequest(
+            {on_cf: (xhr.getResponseHeader("Server") == "cloudflare-nginx")}, 
+            function(response) {}
+        );
     }
 }
 
