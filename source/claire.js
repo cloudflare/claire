@@ -10,6 +10,8 @@
 
 chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
     
+    // set the appropriate icon
+    
     if (request.on_cf) {
         chrome.pageAction.setIcon({tabId: sender.tab.id, path: "images/orange_cloud.png"});
         chrome.pageAction.show(sender.tab.id);
@@ -20,5 +22,11 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
     
     sendResponse({});   // null response to close the request
     
+});
+
+// when the page action icon is clicked, open a tab and load cloudflare.com
+
+chrome.pageAction.onClicked.addListener(function() {
+    chrome.tabs.create({url: "https://www.cloudflare.com"});
 });
 
