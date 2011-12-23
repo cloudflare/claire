@@ -12,5 +12,5 @@ xhr.onreadystatechange = function(data) {
 }
 
 var url = window.location.href;
-xhr.open('HEAD', url, true);
+xhr.open('GET', url, true);
 xhr.send();
