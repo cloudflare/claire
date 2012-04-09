@@ -8,7 +8,6 @@
 	"permissions": ["tabs"],
 	"background_page": "background.html",
 	"page_action": {
-	    "default_icon": "images/orange_cloud.png"
 	},
     "content_scripts": [{
       "matches": ["http://*/*", "https://*/*"],
