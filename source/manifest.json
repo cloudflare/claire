@@ -5,7 +5,7 @@
 	"icons": {
 	    "128": "images/orange-cloud-128.png"
 	},
-	"permissions": ["tabs", "http://*/"],
+	"permissions": ["tabs", "http://*/", "https://*/"],
 	"background_page": "background.html",
 	"page_action": {
         "default_title": "CloudFlare"
