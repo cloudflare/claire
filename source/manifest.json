@@ -1,7 +1,7 @@
 {
 	"name": "Claire",
 	"description": "Diagnostic tool for CloudFlare",
-	"version": "0.2.7",
+	"version": "0.2.8",
 	"icons": {
 	    "128": "images/orange-cloud-128.png"
 	},
