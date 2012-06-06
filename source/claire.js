@@ -19,12 +19,14 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
             var xhr = new XMLHttpRequest();
             xhr.onreadystatechange = function(data) {
                 // set the appropriate icon
-                if (xhr.readyState == 4 && xhr.getResponseHeader("Server") === "cloudflare-nginx") {
-                    chrome.pageAction.setIcon({tabId: sender.tab.id, path: "images/orange_cloud.png"});
-                    chrome.pageAction.show(sender.tab.id);
-                } else {
-                    chrome.pageAction.setIcon({tabId: sender.tab.id, path: "images/grey_cloud.png"});
-                    chrome.pageAction.show(sender.tab.id);
+                if (xhr.readyState == 4) {
+                    if (xhr.getResponseHeader("Server") === "cloudflare-nginx") {
+                        chrome.pageAction.setIcon({tabId: sender.tab.id, path: "images/orange_cloud.png"});
+                        chrome.pageAction.show(sender.tab.id);
+                    } else {
+                        chrome.pageAction.setIcon({tabId: sender.tab.id, path: "images/grey_cloud.png"});
+                        chrome.pageAction.show(sender.tab.id);
+                    }
                 }
             };
 
