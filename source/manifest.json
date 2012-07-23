@@ -1,7 +1,7 @@
 {
 	"name": "Claire",
 	"description": "Shows an orange cloud in the omnibar when you are browsing a site that uses CloudFlare",
-	"version": "0.2.8",
+	"version": "0.2.9",
 	"icons": {
 	    "128": "images/orange-cloud-128.png"
 	},
