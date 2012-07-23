@@ -2,8 +2,10 @@
 
 chrome.extension.sendRequest(
     {
+        'action': 'set_claire_icon',
         'host': window.location.host,
-        'action': 'set_claire_icon'
+        'protocol': window.location.protocol,
+        'spdy': window.chrome.loadTimes().wasFetchedViaSpdy
     },
     function(response) {}
 );
