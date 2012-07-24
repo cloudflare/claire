@@ -7,7 +7,7 @@
 
 // intercept the message passed by the content script and set the right icon
 
-chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
+chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
     if (request.action == 'set_claire_icon') {
         sendResponse({});   // empty response to close the request (message passed by Content Script)
 

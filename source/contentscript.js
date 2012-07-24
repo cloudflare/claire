@@ -1,6 +1,6 @@
 // tell the extension about the domain
 
-chrome.extension.sendRequest(
+chrome.extension.sendMessage(
     {
         'action': 'set_claire_icon',
         'host': window.location.host,
