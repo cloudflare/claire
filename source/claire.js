@@ -21,15 +21,16 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
                 // wait for the headers received event
                 if (xhr.readyState == 2) {
                     // set the appropriate icon
-                    if (xhr.getResponseHeader("Server") === "cloudflare-nginx") {
-                        var has_spdy_str = (request.spdy)? "_spdy" : "";
-                        var orange_cloud_path = "images/orange_cloud" + has_spdy_str + ".png";
-                        chrome.pageAction.setIcon({tabId: sender.tab.id, path: orange_cloud_path});
-                        chrome.pageAction.show(sender.tab.id);
-                    } else {
-                        chrome.pageAction.setIcon({tabId: sender.tab.id, path: "images/grey_cloud.png"});
-                        chrome.pageAction.show(sender.tab.id);
-                    }
+
+                    cf_status = (xhr.getResponseHeader("Server") === "cloudflare-nginx")? "on" : "off";
+                    var image_path_parts = [cf_status];
+                    if (request.spdy) image_path_parts.push("spdy");
+
+                    var image_path = "images/claire-3-" + image_path_parts.join("-") + ".png";
+
+                    chrome.pageAction.setIcon({tabId: sender.tab.id, path: image_path});
+                    chrome.pageAction.show(sender.tab.id);
+
                 }
             };
 
@@ -40,8 +41,6 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
         }
     }
 });
-
-
 
 // when the page action icon is clicked, open a tab and load cloudflare.com
 
