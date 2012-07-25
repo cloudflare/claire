@@ -4,6 +4,43 @@
     otherwise show the grey cloud.
 */
 
+// check if the cloudflare server header is present in response headers array
+var has_cf_server_header = function(headers) {
+    for (var i=0; i < headers.length; i++) {
+        var header = headers[i];
+        if (header.name.toUpperCase() === "SERVER") {
+            if (header.value === "cloudflare-nginx") {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    };
+    return false;
+};
+
+// get the Railgun ID value from header
+var get_railgun_id = function(headers) {
+    for (var i=0; i < headers.length; i++) {
+        var header = headers[i];
+        if (header.name.toUpperCase() === "CF-RAILGUN-ID") {
+            return header.value;
+        }
+    };
+    return "";
+};
+
+
+// check if IP is IPv6
+// see if the IP address string has a . in it, if not it's IPv6
+var v6_ip = function(ip) {
+    if (ip.indexOf(".") !== -1) {
+        return false;
+    } else {
+        return true;
+    }
+}
+
 
 // intercept the message passed by the content script and set the right icon
 
@@ -41,6 +78,15 @@ chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
         }
     }
 });
+
+chrome.webRequest.onCompleted.addListener(function(details) {
+
+    if (localStorage.debug_logging !== 'undefined' && localStorage.debug_logging === 'yes') {
+        console.log(details, details.url, "CF - " + has_cf_server_header(details.responseHeaders), details.ip, "Railgun - ", get_railgun_id(details.responseHeaders));
+    }
+
+}, {'urls': ['<all_urls>'], 'types': ['main_frame']}, ['responseHeaders']);
+
 
 // when the page action icon is clicked, open a tab and load cloudflare.com
 

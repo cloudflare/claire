@@ -6,7 +6,7 @@
 	"icons": {
 	    "128": "images/orange-cloud-128.png"
 	},
-	"permissions": ["tabs", "http://*/", "https://*/"],
+	"permissions": ["tabs", "http://*/", "https://*/", "webRequest"],
     "background": {
         "scripts": ["claire.js"]
     },
@@ -17,5 +17,6 @@
       "matches": ["http://*/*", "https://*/*"],
       "js" : ["contentscript.js"],
       "run_at": "document_start"
-    }]
+    }],
+    "options_page": "options.html"
 }
