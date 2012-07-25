@@ -34,7 +34,7 @@ chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
                 }
             };
 
-            xhr.open('HEAD', "http://"+request.host, true);
+            xhr.open('GET', "http://"+request.host, true);
             xhr.send();
         } catch(e) {
             console.log(e);
