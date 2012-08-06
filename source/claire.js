@@ -4,92 +4,80 @@
     otherwise show the grey cloud.
 */
 
-// check if the cloudflare server header is present in response headers array
-var has_cf_server_header = function(headers) {
+// iterate over response headers and see if the page passed through CloudFlare
+// and if Railgun was used on the backend
+var get_cf_info_from_headers = function(headers) {
+    var cf_status = {
+        'cloudflare': false,
+        'railgun': false
+    };
+
     for (var i=0; i < headers.length; i++) {
         var header = headers[i];
+        // if server header has cloudflare-nginx
         if (header.name.toUpperCase() === "SERVER") {
             if (header.value === "cloudflare-nginx") {
-                return true;
+                cf_status.cloudflare = true;
+                continue;
             } else {
-                return false;
+                cf_status.cloudflare = false;
+                cf_status.railgun = false;
+                return cf_status;
             }
         }
-    };
-    return false;
-};
-
-// get the Railgun ID value from header
-var get_railgun_id = function(headers) {
-    for (var i=0; i < headers.length; i++) {
-        var header = headers[i];
+        // if railgun ID header is present
         if (header.name.toUpperCase() === "CF-RAILGUN-ID") {
-            return header.value;
+            cf_status.cloudflare = true;
+            cf_status.railgun = true;
+            cf_status.railgun_id = header.value;
+            return cf_status;
         }
     };
-    return "";
+    return cf_status;
 };
 
-
-// check if IP is IPv6
-// see if the IP address string has a . in it, if not it's IPv6
+// check if IP address is IPv6
+// see if the IP address string has a : in it
 var v6_ip = function(ip) {
-    if (ip.indexOf(".") !== -1) {
-        return false;
-    } else {
-        return true;
-    }
+    return (ip.indexOf(":") !== -1)? true : false;
 }
 
-
-// intercept the message passed by the content script and set the right icon
-
-chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
-    if (request.action == 'set_claire_icon') {
-        sendResponse({});   // empty response to close the request (message passed by Content Script)
-
-        // remove the page action if navigating to a different page in
-        // the same tab until we know which one to show
-        chrome.pageAction.hide(sender.tab.id);
-        try {
-            // make an AJAX request to get the server header
-            var xhr = new XMLHttpRequest();
-            xhr.onreadystatechange = function(data) {
-                // wait for the headers received event
-                if (xhr.readyState == 2) {
-                    // set the appropriate icon
-
-                    cf_status = (xhr.getResponseHeader("Server") === "cloudflare-nginx")? "on" : "off";
-                    var image_path_parts = [cf_status];
-                    if (request.spdy) image_path_parts.push("spdy");
-
-                    var image_path = "images/claire-3-" + image_path_parts.join("-") + ".png";
-
-                    chrome.pageAction.setIcon({tabId: sender.tab.id, path: image_path});
-                    chrome.pageAction.show(sender.tab.id);
-
-                }
-            };
-
-            xhr.open('GET', "http://"+request.host, true);
-            xhr.send();
-        } catch(e) {
-            console.log(e);
-        }
-    }
-});
-
+// listen to web requests on completed event
 chrome.webRequest.onCompleted.addListener(function(details) {
 
-    if (localStorage.debug_logging !== 'undefined' && localStorage.debug_logging === 'yes') {
-        console.log(details, details.url, "CF - " + has_cf_server_header(details.responseHeaders), details.ip, "Railgun - ", get_railgun_id(details.responseHeaders));
+    var tab_id = details.tabId;
+
+    var cf_info = get_cf_info_from_headers(details.responseHeaders);
+
+    // logging - controlled by a flag, toggle available in the extension's options page
+    if (typeof localStorage.debug_logging !== 'undefined' && localStorage.debug_logging === 'yes') {
+        console.log(details, details.url, "CF - " + cf_info.cloudflare, details.ip, "Railgun - ", cf_info.railgun_id);
     }
 
-}, {'urls': ['<all_urls>'], 'types': ['main_frame']}, ['responseHeaders']);
+    try {
+        // send a message to content script and ask about SPDY status
+        var cs_message_data = {'action': 'check_spdy_status'};
+        var cs_message_callback = function(cs_msg_response) {
 
+            // stop and return if we don't get a response, happens with hidden/background tabs
+            if (typeof cs_msg_response === 'undefined') return;
 
-// when the page action icon is clicked, open a tab and load cloudflare.com
+            var cf_status = cf_info.cloudflare? "on" : "off";
+            var image_parts = [cf_status];
+            if (cs_msg_response.spdy) image_parts.push("spdy");
+            if (v6_ip(details.ip)) image_parts.push("ipv6");
+            if(cf_info.railgun) image_parts.push("rg");
 
-chrome.pageAction.onClicked.addListener(function() {
-    chrome.tabs.create({url: "https://www.cloudflare.com"});
-});
+            var image_path = "images/claire-3-" + image_parts.join("-") + ".png";
+
+            chrome.pageAction.setIcon({tabId: tab_id, path: image_path});
+            chrome.pageAction.setPopup({'tabId': tab_id, 'popup': "page_action_popup.html"});
+            chrome.pageAction.show(tab_id);
+
+        };
+        chrome.tabs.sendMessage(tab_id, cs_message_data, cs_message_callback);
+    } catch(e) {
+        console.log("Exception", e);
+    }
+
+}, {'urls': ['http://*/*', 'https://*/*'], 'types': ['main_frame']}, ['responseHeaders']);
