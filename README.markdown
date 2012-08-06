@@ -1,6 +1,6 @@
 # Claire
 
-Chrome extension that shows a page action to indicate whether a site is using CloudFlare or not
+Chrome extension that shows a page action to indicate whether a site is using [CloudFlare](http://www.cloudflare.com) or not
 
 
 ## Installation
