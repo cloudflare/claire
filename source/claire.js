@@ -66,14 +66,15 @@ chrome.webRequest.onCompleted.addListener(function(details) {
             var image_parts = [cf_status];
             if (cs_msg_response.spdy) image_parts.push("spdy");
             if (v6_ip(details.ip)) image_parts.push("ipv6");
-            if(cf_info.railgun) image_parts.push("rg");
+            if (cf_info.railgun) image_parts.push("rg");
 
             var image_path = "images/claire-3-" + image_parts.join("-") + ".png";
-
-            chrome.pageAction.setIcon({tabId: tab_id, path: image_path});
-            chrome.pageAction.setPopup({'tabId': tab_id, 'popup': "page_action_popup.html"});
-            chrome.pageAction.show(tab_id);
-
+            
+            if (cf_status == "on" || (cs_msg_response.spdy || v6_ip(details.ip) || cf_info.railgun)) {
+                chrome.pageAction.setIcon({tabId: tab_id, path: image_path});
+                chrome.pageAction.setPopup({'tabId': tab_id, 'popup': "page_action_popup.html"});
+                chrome.pageAction.show(tab_id);
+            }
         };
         chrome.tabs.sendMessage(tab_id, cs_message_data, cs_message_callback);
     } catch(e) {
