@@ -26,7 +26,7 @@ var get_cf_info_from_headers = function(headers) {
             }
         }
         // if railgun ID header is present
-        if (header.name.toUpperCase() === "CF-RAILGUN-ID") {
+        if (header.name.toUpperCase() === "CF-RAILGUN") {
             cf_status.cloudflare = true;
             cf_status.railgun = true;
             cf_status.railgun_id = header.value;
