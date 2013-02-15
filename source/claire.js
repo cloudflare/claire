@@ -29,7 +29,7 @@ var get_cf_info_from_headers = function(headers) {
         if (header.name.toUpperCase() === "CF-RAILGUN") {
             cf_status.cloudflare = true;
             cf_status.railgun = true;
-            cf_status.railgun_id = header.value;
+            cf_status.railgun_meta_data = header.value;
             return cf_status;
         }
     };
@@ -51,7 +51,7 @@ chrome.webRequest.onCompleted.addListener(function(details) {
 
     // logging - controlled by a flag, toggle available in the extension's options page
     if (typeof localStorage.debug_logging !== 'undefined' && localStorage.debug_logging === 'yes') {
-        console.log(details, details.url, "CF - " + cf_info.cloudflare, details.ip, "Railgun - ", cf_info.railgun_id);
+        console.log(details, details.url, "CF - " + cf_info.cloudflare, details.ip, "Railgun - ", cf_info.railgun_meta_data);
     }
 
     try {
