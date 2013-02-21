@@ -14,8 +14,9 @@ var get_cf_info_from_headers = function(headers) {
 
     for (var i=0; i < headers.length; i++) {
         var header = headers[i];
+        var header_name = header.name.toUpperCase();
         // if server header has cloudflare-nginx
-        if (header.name.toUpperCase() === "SERVER") {
+        if (header_name === "SERVER") {
             if (header.value === "cloudflare-nginx") {
                 cf_status.cloudflare = true;
                 continue;
@@ -25,12 +26,16 @@ var get_cf_info_from_headers = function(headers) {
                 return cf_status;
             }
         }
+        // if CF-RAY header is present, get the RAY ID
+        if (header_name === "CF-RAY") {
+            cf_status['ray_id'] = header.value;
+        }
         // if railgun ID header is present
-        if (header.name.toUpperCase() === "CF-RAILGUN") {
+        if (header_name === "CF-RAILGUN") {
             cf_status.cloudflare = true;
             cf_status.railgun = true;
-            cf_status.railgun_meta_data = header.value;
-            return cf_status;
+            cf_status.railgun_header = header.value;
+            cf_status.railgun_meta_data = process_railgun_header(header.value);
         }
     };
     return cf_status;
@@ -40,7 +45,76 @@ var get_cf_info_from_headers = function(headers) {
 // see if the IP address string has a : in it
 var v6_ip = function(ip) {
     return (ip.indexOf(":") !== -1)? true : false;
-}
+};
+
+// extract info from the Railgun header
+// sample - f1cb3b9f7d 0.02 0.008966 30
+// Railgun ID, compression, time to generate response, bit set (see code)
+var process_railgun_header = function(header) {
+    var info = {};
+    if (! typeof header === "string") {
+        return info;
+    }
+    var parts = header.split(" ");
+    info['id'] = parts[0];
+    info['compression'] = (100 - parts[1]) + "%";
+    info['time'] = parts[2] + "sec";
+
+    // decode the flags bitest
+    var flags_bitset = parseInt(parts[3], 10);
+
+    var railgun_flags = {
+        FLAG_DOMAIN_MAP_USED: {
+            position: 0x01,
+            message: "map.file used to change IP"
+        },
+        FLAG_DEFAULT_IP_USED: {
+            position: 0x02,
+            message: "map.file default IP used"
+        },
+        FLAG_HOST_CHANGE: {
+            position: 0x04,
+            message: "Host name change"
+        },
+        FLAG_REUSED_CONNECTION: {
+            position: 0x08,
+            message: "Existing connection reused"
+        },
+        FLAG_HAD_DICTIONARY: {
+            position: 0x10,
+            message: "Railgun sender sent dictionary"
+        },
+        FLAG_WAS_CACHED: {
+            position: 0x20,
+            message: "Dictionary found in memcache"
+        },
+        FLAG_RESTART_CONNECTION: {
+            position: 0x40,
+            message: "Restarted broken origin connection"
+        }
+    }
+
+    var messages = [];
+
+    for(var flag_key in railgun_flags) {
+        var flag = railgun_flags[flag_key];
+        if ((flags_bitset & flag.position) !== 0) {
+            messages.push(flag.message);
+        }
+    }
+
+    info['flags'] = flags_bitset;
+    info['messages'] = messages;
+
+    return info;
+};
+
+// store CloudFlare related request info in an object keyed by tab ID
+// for use in other places (for example - page action popup)
+var tab_data = {};
+
+// clear tab data when tabs are destroyed
+chrome.tabs.onRemoved.addListener(function(tabId, removeInfo) { delete tab_data[tabId] });
 
 // listen to web requests on completed event
 chrome.webRequest.onCompleted.addListener(function(details) {
@@ -49,9 +123,18 @@ chrome.webRequest.onCompleted.addListener(function(details) {
 
     var cf_info = get_cf_info_from_headers(details.responseHeaders);
 
+    // store for use in other contexts
+    tab_data[tab_id] = cf_info;
+    tab_data[tab_id]['ip'] = details.ip;
+    tab_data[tab_id]['ipv6'] = v6_ip(details.ip);
+
     // logging - controlled by a flag, toggle available in the extension's options page
     if (typeof localStorage.debug_logging !== 'undefined' && localStorage.debug_logging === 'yes') {
-        console.log(details, details.url, "CF - " + cf_info.cloudflare, details.ip, "Railgun - ", cf_info.railgun_meta_data);
+        console.log(details.url, details.ip, "CF - " + cf_info.cloudflare, "Ray ID - " + cf_info.ray_id, 
+                    "Railgun ID - " + cf_info.railgun_meta_data['id']);
+        console.log("Railgun - ", cf_info.railgun_meta_data.messages.join("; "));
+        console.log("CloudFlare - ", cf_info);
+        console.log("Request - ", details);
     }
 
     try {

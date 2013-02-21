@@ -1,13 +1,79 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <style>
+        <title>Claire</title>
+        <!-- <link rel="stylesheet" href="page_action_popup.css" type="text/css" media="no title" charset="utf-8" /> -->
+        <style type="text/css" media="screen">
             body {
                 margin: 0;
+                font-family: "Helvetica", "sans-serif";
+                font-size: 0.8em;
+                line-height: 1.4em;
+            }
+            code {
+                font-family: "Source Code Pro", "Menlo", "Consolas", "Courier";
+                background-color: #efefef;
+                border: 1px solid #dfdfdf;
+                border-radius: 3px;
+                padding: 2px 4px;
+            }
+            #claireInfoImage {
+                margin: auto;
+                width: 250px;
+            }
+            .feature_meta {
+                float: left;
+                width: 100%;
+                padding: 20px 10px;
+                border-left: 10px solid;
+            }
+            .feature_meta:last-of-type {
+                border-bottom: none;
+            }
+            .feature_meta ul {
+                list-style: none;
+                padding: 0px;
+                margin: 0px;
+            }
+            .feature_meta li {
+                padding: 5px 0;
+            }
+            #ray {
+                display: none;
+                border-left-color: #FB9D37;
+            }
+            #railgun {
+                display: none;
+                border-left-color: #BF1B2A;
+            }
+            .v6 {
+                border-left-color: #2E7CBA;
+            }
+            .v4 {
+                border-left-color: #ddd;
             }
         </style>
     </head>
     <body id="page_action_popup">
-        <img src="images/claire-3-popup.png" />
+        <div id="claireInfoImage">
+            <img src="images/claire-3-popup.png" />
+        </div>
+        <div id="requestInfo">
+            <div id="ipAddress" class="feature_meta">
+                IP Address: <code><span id="ip"></span></code>
+            </div>
+            <div id="ray" class="feature_meta">
+                Ray ID: <code><span id="rayID"></span></code>
+            </div>
+            <div id="railgun" class="feature_meta">
+                <ul>
+                    <li>Railgun ID: <code><span id="railgunID"></span></code></li>
+                    <li>Compression: <span id="railgunCompression"></span></li>
+                    <li>Time: <span id="railgunTime"></span></li>
+                </ul>
+            </div>
+        </div>
+        <script src="jquery-1.9.1.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="page_action_popup.js" type="text/javascript" charset="utf-8"></script>
     </body>
 </html>
