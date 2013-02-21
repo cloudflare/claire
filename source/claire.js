@@ -37,7 +37,7 @@ var get_cf_info_from_headers = function(headers) {
             cf_status.railgun_header = header.value;
             cf_status.railgun_meta_data = process_railgun_header(header.value);
         }
-    };
+    }
     return cf_status;
 };
 
@@ -52,7 +52,7 @@ var v6_ip = function(ip) {
 // Railgun ID, compression, time to generate response, bit set (see code)
 var process_railgun_header = function(header) {
     var info = {};
-    if (! typeof header === "string") {
+    if (!(typeof header === "string")) {
         return info;
     }
     var parts = header.split(" ");
@@ -130,11 +130,14 @@ chrome.webRequest.onCompleted.addListener(function(details) {
 
     // logging - controlled by a flag, toggle available in the extension's options page
     if (typeof localStorage.debug_logging !== 'undefined' && localStorage.debug_logging === 'yes') {
-        console.log(details.url, details.ip, "CF - " + cf_info.cloudflare, "Ray ID - " + cf_info.ray_id, 
-                    "Railgun ID - " + cf_info.railgun_meta_data['id']);
-        console.log("Railgun - ", cf_info.railgun_meta_data.messages.join("; "));
-        console.log("CloudFlare - ", cf_info);
+        console.log(details.url, details.ip, "CF - " + cf_info.cloudflare);
         console.log("Request - ", details);
+        if (cf_info.cloudflare) {
+            console.log("CloudFlare - ", cf_info.ray_id, cf_info);
+        }
+        if (cf_info.railgun) {
+            console.log("Railgun - ", cf_info.railgun_meta_data['id'], cf_info.railgun_meta_data.messages.join("; "));
+        }
     }
 
     try {
