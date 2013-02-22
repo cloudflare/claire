@@ -67,6 +67,7 @@ var process_railgun_header = function(header) {
 
     var flags_bitset = 0;
 
+    info['normal'] = railgun_normal;
     info['id'] = parts[0];
     if (railgun_normal) {
         flags_bitset = parseInt(parts[1], 10);

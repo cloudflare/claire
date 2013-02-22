@@ -24,9 +24,12 @@ chrome.tabs.query(queryInfo, function(tabs) {
 
     // show Railgun related info
     if ('railgun_meta_data' in request_info) {
-        $("#railgunID").text(request_info['railgun_meta_data']['id']);
-        $("#railgunCompression").text(request_info['railgun_meta_data']['compression']);
-        $("#railgunTime").text(request_info['railgun_meta_data']['time']);
+        var railgun_meta_data = request_info['railgun_meta_data'];
+        $("#railgunID").text(railgun_meta_data['id']);
+        if (!railgun_meta_data['normal']) {
+            $("#railgunCompression").text(railgun_meta_data['compression']);
+            $("#railgunTime").text(railgun_meta_data['time']);
+        }
         $("#railgun").show();
     }
-})
+});
