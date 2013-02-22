@@ -48,21 +48,37 @@ var v6_ip = function(ip) {
 };
 
 // extract info from the Railgun header
+// header formats
+// Cf-Railgun: <railgun-id> <flags> normal <version>
+// Cf-Railgun: <railgun-id> <compression ratio %> <origin server time s> <16 bits of flags> <first 4 digits of Railgun version>
 // sample - f1cb3b9f7d 0.02 0.008966 30
-// Railgun ID, compression, time to generate response, bit set (see code)
+
 var process_railgun_header = function(header) {
     var info = {};
     if (!(typeof header === "string")) {
         return info;
     }
+
+    // Railgun header can be in one of two formats
+    // one of them will have the string "normal"
+    var railgun_normal = (header.indexOf("normal") !== -1);
+
     var parts = header.split(" ");
+
+    var flags_bitset = 0;
+
     info['id'] = parts[0];
-    info['compression'] = (100 - parts[1]) + "%";
-    info['time'] = parts[2] + "sec";
+    if (railgun_normal) {
+        flags_bitset = parseInt(parts[1], 10);
+        info['version'] = parts[3];
+    } else {
+        info['compression'] = (100 - parts[1]) + "%";
+        info['time'] = parts[2] + "sec";
+        flags_bitset = parseInt(parts[3], 10);
+        info['version'] = parts[4];
+    }
 
     // decode the flags bitest
-    var flags_bitset = parseInt(parts[3], 10);
-
     var railgun_flags = {
         FLAG_DOMAIN_MAP_USED: {
             position: 0x01,
@@ -92,7 +108,7 @@ var process_railgun_header = function(header) {
             position: 0x40,
             message: "Restarted broken origin connection"
         }
-    }
+    };
 
     var messages = [];
 
@@ -114,7 +130,7 @@ var process_railgun_header = function(header) {
 var tab_data = {};
 
 // clear tab data when tabs are destroyed
-chrome.tabs.onRemoved.addListener(function(tabId, removeInfo) { delete tab_data[tabId] });
+chrome.tabs.onRemoved.addListener(function(tabId, removeInfo) { delete tab_data[tabId]; });
 
 // listen to web requests on completed event
 chrome.webRequest.onCompleted.addListener(function(details) {
