@@ -1,22 +1,29 @@
 {
-	"name": "Claire",
-	"description": "Shows an orange cloud in the omnibar when you are browsing a site that uses CloudFlare",
-	"version": "0.4.4",
+    "name": "Claire",
+    "description": "Shows an orange cloud in the omnibar when you are browsing a site that uses CloudFlare",
+    "version": "0.4.5",
     "manifest_version": 2,
-	"icons": {
-	    "128": "images/orange-cloud-128.png"
-	},
-	"permissions": ["tabs", "http://*/", "https://*/", "webRequest"],
-    "background": {
-        "scripts": ["claire.js"]
+    "icons": {
+        "128": "images/orange-cloud-128.png"
     },
-	"page_action": {
+    "permissions": [
+                        "tabs",
+                        "webNavigation",
+                        "webRequest",
+                        "http://*/",
+                        "https://*/"
+                   ],
+    "background": {
+        "page": "background.html",
+        "persistent": true
+    },
+    "page_action": {
         "default_title": "CloudFlare"
-	},
+    },
     "content_scripts": [{
-      "matches": ["http://*/*", "https://*/*"],
-      "js" : ["contentscript.js"],
-      "run_at": "document_start"
-    }],
+                            "matches": ["<all_urls>"],
+                            "js" : ["contentscript.js"],
+                            "run_at": "document_start"
+                        }],
     "options_page": "options.html"
 }

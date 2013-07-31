@@ -1,86 +1,143 @@
-/**
-    Claire
-    Show an orange cloud in the omnibar if the current website is on CloudFlare
-    otherwise show the grey cloud.
-*/
+// Claire
 
-// iterate over response headers and see if the page passed through CloudFlare
-// and if Railgun was used on the backend
-var get_cf_info_from_headers = function(headers) {
-    var cf_status = {
-        'cloudflare': false,
-        'railgun': false
-    };
+'use strict';
 
-    for (var i=0; i < headers.length; i++) {
-        var header = headers[i];
-        var header_name = header.name.toUpperCase();
-        // if server header has cloudflare-nginx
-        if (header_name === "SERVER") {
-            if (header.value === "cloudflare-nginx") {
-                cf_status.cloudflare = true;
-                continue;
-            } else {
-                cf_status.cloudflare = false;
-                cf_status.railgun = false;
-                return cf_status;
-            }
-        }
-        // if CF-RAY header is present, get the RAY ID
-        if (header_name === "CF-RAY") {
-            cf_status['ray_id'] = header.value;
-        }
-        // if railgun ID header is present
-        if (header_name === "CF-RAILGUN") {
-            cf_status.cloudflare = true;
-            cf_status.railgun = true;
-            cf_status.railgun_header = header.value;
-            cf_status.railgun_meta_data = process_railgun_header(header.value);
-        }
+// a mapping of tab IDs to requests
+var requests = {
+
+};
+
+// listen to all web requests and when request is completed, create a new
+// Request object that contains a bunch of information about the request
+
+var processCompletedRequest = function(details) {
+    var request = new Request(details);
+    console.log('Request constructor returned');
+    requests[details.tabId] = request;
+
+    console.log('\n');
+    console.log('Completed request for:');
+    console.log(request.getRequestURL());
+    console.dir(request);
+    console.log('request ID: ', details.requestId);
+    console.log('cache: ', request.ServedFromBrowserCache());
+    console.log('CloudFlare: ', request.servedByCloudFlare());
+
+    // setPageActionIcon(details.tabId, request);
+};
+
+var filter = {
+    urls: ['<all_urls>'],
+    types: ['main_frame']
+};
+
+var extraInfoSpec = ['responseHeaders'];
+
+// start listening to all web requests
+chrome.webRequest.onCompleted.addListener(processCompletedRequest, filter, extraInfoSpec);
+
+// when a tab is replaced, usually when a request started in a background tab
+// and then the tab is upgraded to a regular tab (becomes visible)
+chrome.tabs.onReplaced.addListener(function(addedTabId, removedTabId) {
+    console.log('tab replaced');
+    console.log(addedTabId , ' replaced ', removedTabId);
+    if (removedTabId in requests) {
+        console.log('swapping data and setting page action');
+        requests[addedTabId] = requests[removedTabId];
+        delete requests[removedTabId];
+    } else {
+        console.log('could not find an entry in requests for ', removedTabId);
     }
-    return cf_status;
+
+});
+
+chrome.webNavigation.onDOMContentLoaded.addListener(function(details) {
+    console.log('completed navigation, DOMContentLoaded in tab: ', details.tabId, details.url, details.frameId);
+
+    if (details.frameId > 0) {
+        // we don't care about sub-frame requests
+        return;
+    }
+
+    if (details.tabId in requests) {
+        var request = requests[details.tabId];
+        request.querySPDYStatusAndSetIcon();
+    }
+});
+
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+    console.log('ping from content script!', sender.tab);
+    sendResponse({});
+    var request = requests[sender.tab.id];
+    if (request) {
+        request.setSPDYStatus(request.spdy);
+    }
+});
+
+// clear request data when tabs are destroyed
+chrome.tabs.onRemoved.addListener(function(tabId, removeInfo) { delete requests[tabId]; });
+
+// the Request object, contains information about a request
+var Request = function(details) {
+    this.details = details;
+    this.headersRaw = details.responseHeaders;
+
+    // headers will be stored as name: value pairs (all names will be upper case)
+    this.headers = {};
+
+    // weather the request object knows about the SPDY status or not
+    // this status is available in the context of the page, requires message passing
+    // from the extension to the page
+    this.hasSPDYStatus = false;
+
+    this.preProcessHeaders();
 };
 
-// check if IP address is IPv6
-// see if the IP address string has a : in it
-var v6_ip = function(ip) {
-    return (ip.indexOf(":") !== -1)? true : false;
+// convert the headers array into an object and upcase all names
+// (warning! will preserve only last of multiple headers with same name)
+Request.prototype.preProcessHeaders = function() {
+    this.headersRaw.forEach(function(header) {
+        this.headers[header.name.toUpperCase()] = header.value;
+    }, this);
+
+    if ('CF-RAILGUN' in this.headers) {
+        this.processRailgunHeader();
+    }
+
 };
 
-// extract info from the Railgun header
-// header formats
-// Cf-Railgun: <railgun-id> <flags> normal <version>
-// Cf-Railgun: <railgun-id> <compression ratio %> <origin server time s> <16 bits of flags> <first 4 digits of Railgun version>
-// sample - f1cb3b9f7d 0.02 0.008966 30
+Request.prototype.processRailgunHeader = function() {
 
-var process_railgun_header = function(header) {
-    var info = {};
-    if (!(typeof header === "string")) {
-        return info;
+    var railgunHeader = this.headers['CF-RAILGUN'];
+
+    this.railgunMetaData = {};
+
+    if (!(typeof railgunHeader === "string")) {
+        return this.railgunMetaData;
     }
 
     // Railgun header can be in one of two formats
     // one of them will have the string "normal"
-    var railgun_normal = (header.indexOf("normal") !== -1);
+    var railgunNormal = (railgunHeader.indexOf("normal") !== -1);
 
-    var parts = header.split(" ");
+    var parts = railgunHeader.split(" ");
 
-    var flags_bitset = 0;
+    var flagsBitset = 0;
 
-    info['normal'] = railgun_normal;
-    info['id'] = parts[0];
-    if (railgun_normal) {
-        flags_bitset = parseInt(parts[1], 10);
-        info['version'] = parts[3];
+    this.railgunMetaData['normal'] = railgunNormal;
+    this.railgunMetaData['id'] = parts[0];
+    if (railgunNormal) {
+        flagsBitset = parseInt(parts[1], 10);
+        this.railgunMetaData['version'] = parts[3];
     } else {
-        info['compression'] = (100 - parts[1]) + "%";
-        info['time'] = parts[2] + "sec";
-        flags_bitset = parseInt(parts[3], 10);
-        info['version'] = parts[4];
+        this.railgunMetaData['compression'] = (100 - parts[1]) + "%";
+        this.railgunMetaData['time'] = parts[2] + "sec";
+        flagsBitset = parseInt(parts[3], 10);
+        this.railgunMetaData['version'] = parts[4];
     }
 
     // decode the flags bitest
-    var railgun_flags = {
+    var railgunFlags = {
         FLAG_DOMAIN_MAP_USED: {
             position: 0x01,
             message: "map.file used to change IP"
@@ -113,74 +170,132 @@ var process_railgun_header = function(header) {
 
     var messages = [];
 
-    for(var flag_key in railgun_flags) {
-        var flag = railgun_flags[flag_key];
-        if ((flags_bitset & flag.position) !== 0) {
+    for(var flagKey in railgunFlags) {
+        var flag = railgunFlags[flagKey];
+        if ((flagsBitset & flag.position) !== 0) {
             messages.push(flag.message);
         }
     }
 
-    info['flags'] = flags_bitset;
-    info['messages'] = messages;
+    this.railgunMetaData['flags'] = flagsBitset;
+    this.railgunMetaData['messages'] = messages;
 
-    return info;
 };
 
-// store CloudFlare related request info in an object keyed by tab ID
-// for use in other places (for example - page action popup)
-var tab_data = {};
-
-// clear tab data when tabs are destroyed
-chrome.tabs.onRemoved.addListener(function(tabId, removeInfo) { delete tab_data[tabId]; });
-
-// listen to web requests on completed event
-chrome.webRequest.onCompleted.addListener(function(details) {
-
-    var tab_id = details.tabId;
-
-    var cf_info = get_cf_info_from_headers(details.responseHeaders);
-
-    // store for use in other contexts
-    tab_data[tab_id] = cf_info;
-    tab_data[tab_id]['ip'] = details.ip;
-    tab_data[tab_id]['ipv6'] = v6_ip(details.ip);
-
-    // logging - controlled by a flag, toggle available in the extension's options page
-    if (typeof localStorage.debug_logging !== 'undefined' && localStorage.debug_logging === 'yes') {
-        console.log(details.url, details.ip, "CF - " + cf_info.cloudflare);
-        console.log("Request - ", details);
-        if (cf_info.cloudflare) {
-            console.log("CloudFlare - ", cf_info.ray_id, cf_info);
-        }
-        if (cf_info.railgun) {
-            console.log("Railgun - ", cf_info.railgun_meta_data['id'], cf_info.railgun_meta_data.messages.join("; "));
-        }
-    }
-
-    try {
-        // send a message to content script and ask about SPDY status
+Request.prototype.querySPDYStatusAndSetIcon = function() {
+    var tabID = this.details.tabId;
+    if (this.hasSPDYStatus) {
+        this.setPageActionIconAndPopup();
+    } else {
         var cs_message_data = {'action': 'check_spdy_status'};
         var cs_message_callback = function(cs_msg_response) {
-
             // stop and return if we don't get a response, happens with hidden/background tabs
             if (typeof cs_msg_response === 'undefined') return;
 
-            var cf_status = cf_info.cloudflare? "on" : "off";
-            var image_parts = [cf_status];
-            if (cs_msg_response.spdy) image_parts.push("spdy");
-            if (v6_ip(details.ip)) image_parts.push("ipv6");
-            if(cf_info.railgun) image_parts.push("rg");
+            var request = requests[tabID];
+            request.SPDY = cs_msg_response.spdy;
+            console.log('got SPDY status');
+            request.setPageActionIconAndPopup();
+        }
+        try {
+            chrome.tabs.sendMessage(this.details.tabId, cs_message_data, cs_message_callback);
+        } catch (e) {
+            console.log('caught exception when sending message to content script');
+            console.log(chrome.extension.lastError());
+            console.log(e);
+        }
+        console.log('SPDY status query sent to tab: ', this.details.tabId);
+    }
+};
 
-            var image_path = "images/claire-3-" + image_parts.join("-") + ".png";
+// check if the server header matches 'cloudflare-nginx'
+Request.prototype.servedByCloudFlare = function() {
+    return ('SERVER' in this.headers) && (this.headers.SERVER === 'cloudflare-nginx');
+};
 
-            chrome.pageAction.setIcon({tabId: tab_id, path: image_path});
-            chrome.pageAction.setPopup({'tabId': tab_id, 'popup': "page_action_popup.html"});
-            chrome.pageAction.show(tab_id);
+Request.prototype.servedByRailgun = function() {
+    return ('CF-RAILGUN' in this.headers);
+};
 
-        };
-        chrome.tabs.sendMessage(tab_id, cs_message_data, cs_message_callback);
-    } catch(e) {
-        console.log("Exception", e);
+Request.prototype.servedOverSPDY = function() {
+    return this.SPDY;
+};
+
+Request.prototype.ServedFromBrowserCache = function() {
+    return this.details.fromCache;
+};
+
+Request.prototype.getRayID = function() {
+    return this.headers['CF-RAY'];
+};
+
+Request.prototype.getTabID = function() {
+    return this.details.tabId;
+};
+
+Request.prototype.getRequestURL = function() {
+    return this.details.url;
+};
+
+Request.prototype.getRailgunMetaData = function() {
+    return this.railgunMetaData;
+};
+
+Request.prototype.getServerIP = function() {
+    return this.details.ip;
+};
+
+Request.prototype.isv6IP = function() {
+    return (this.getServerIP().indexOf(':') !== -1);
+};
+
+// figure out what the page action should be based on the
+// features we detected in this request
+Request.prototype.getPageActionPath = function() {
+    var iconPath = 'images/claire-3-';
+    var iconPathParts = [];
+
+    if (this.servedByCloudFlare()) {
+        iconPathParts.push('on')
+    } else {
+        iconPathParts.push('off');
     }
 
-}, {'urls': ['http://*/*', 'https://*/*'], 'types': ['main_frame']}, ['responseHeaders']);
+    if (this.servedOverSPDY()) {
+        iconPathParts.push('spdy');
+    }
+
+    if (this.isv6IP()) {
+        iconPathParts.push('ipv6');
+    }
+
+    if (this.servedByRailgun()) {
+        iconPathParts.push('rg');
+    }
+
+    return iconPath + iconPathParts.join('-') + '.png';
+};
+
+Request.prototype.setSPDYStatus = function(status) {
+    this.hasSPDYStatus = true;
+    this.SPDY = status;
+};
+
+Request.prototype.setPageActionIconAndPopup = function() {
+    console.log("called setPageActionIcon");
+    var iconPath = this.getPageActionPath();
+    console.log(iconPath);
+    var tabID = this.details.tabId;
+    chrome.pageAction.setIcon({
+        tabId: this.details.tabId,
+        path: iconPath
+    }, function() {
+        try {
+            chrome.pageAction.setPopup({'tabId': tabID, 'popup': 'page_action_popup.html'});
+            chrome.pageAction.show(tabID);
+            console.log("called page action show for ", tabID);
+        } catch (e) {
+            console.log('Exception on page action show for tab with ID: ', tabID, e);
+        }
+    });
+};
