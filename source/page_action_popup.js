@@ -16,8 +16,10 @@ chrome.tabs.query(queryInfo, function(tabs) {
     $("#ipAddress").addClass(ipType);
 
     // show the Ray ID
-    $("#rayID").text(request.getRayID());
-    $("#ray").show();
+	if (request.servedByCloudFlare()) {
+	    $("#rayID").text(request.getRayID());
+	    $("#ray").show();
+	}
 
     // show Railgun related info
     if (request.servedByRailgun()) {
