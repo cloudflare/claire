@@ -31,7 +31,7 @@ chrome.tabs.onReplaced.addListener(function(addedTabId, removedTabId) {
         requests[addedTabId] = requests[removedTabId];
         delete requests[removedTabId];
     } else {
-        console.log('could not find an entry in requests for ', removedTabId);
+        console.log('Could not find an entry in requests when replacing ', removedTabId);
     }
 
 });
@@ -48,10 +48,10 @@ chrome.webNavigation.onDOMContentLoaded.addListener(function(details) {
     }
 });
 
-chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+chrome.runtime.onMessage.addListener(function(csRequest, sender, sendResponse) {
     var request = requests[sender.tab.id];
     if (request) {
-        request.setSPDYStatus(request.spdy);
+        request.setSPDYStatus(csRequest.spdy);
     }
     sendResponse({});
 });
@@ -71,6 +71,7 @@ var Request = function(details) {
     // this status is available in the context of the page, requires message passing
     // from the extension to the page
     this.hasSPDYStatus = false;
+    this.SPDY = false;
 
     this.preProcessHeaders();
 };
@@ -169,17 +170,17 @@ Request.prototype.querySPDYStatusAndSetIcon = function() {
     if (this.hasSPDYStatus) {
         this.setPageActionIconAndPopup();
     } else {
-        var cs_message_data = {'action': 'check_spdy_status'};
-        var cs_message_callback = function(cs_msg_response) {
+        var csMessageData = {'action': 'check_spdy_status'};
+        var csMessageCallback = function(csMsgResponse) {
             // stop and return if we don't get a response, happens with hidden/background tabs
-            if (typeof cs_msg_response === 'undefined') return;
+            if (typeof csMsgResponse === 'undefined') return;
 
             var request = requests[tabID];
-            request.SPDY = cs_msg_response.spdy;
+            request.setSPDYStatus(csMsgResponse.spdy);
             request.setPageActionIconAndPopup();
         }
         try {
-            chrome.tabs.sendMessage(this.details.tabId, cs_message_data, cs_message_callback);
+            chrome.tabs.sendMessage(this.details.tabId, csMessageData, csMessageCallback);
         } catch (e) {
             console.log('caught exception when sending message to content script');
             console.log(chrome.extension.lastError());
@@ -187,6 +188,7 @@ Request.prototype.querySPDYStatusAndSetIcon = function() {
         }
     }
 };
+
 
 // check if the server header matches 'cloudflare-nginx'
 Request.prototype.servedByCloudFlare = function() {
