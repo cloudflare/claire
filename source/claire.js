@@ -3,27 +3,15 @@
 'use strict';
 
 // a mapping of tab IDs to requests
-var requests = {
-
-};
+var requests = {};
 
 // listen to all web requests and when request is completed, create a new
 // Request object that contains a bunch of information about the request
 
 var processCompletedRequest = function(details) {
     var request = new Request(details);
-    console.log('Request constructor returned');
     requests[details.tabId] = request;
-
-    console.log('\n');
-    console.log('Completed request for:');
-    console.log(request.getRequestURL());
-    console.dir(request);
-    console.log('request ID: ', details.requestId);
-    console.log('cache: ', request.ServedFromBrowserCache());
-    console.log('CloudFlare: ', request.servedByCloudFlare());
-
-    // setPageActionIcon(details.tabId, request);
+    request.logToConsole();
 };
 
 var filter = {
@@ -39,10 +27,7 @@ chrome.webRequest.onCompleted.addListener(processCompletedRequest, filter, extra
 // when a tab is replaced, usually when a request started in a background tab
 // and then the tab is upgraded to a regular tab (becomes visible)
 chrome.tabs.onReplaced.addListener(function(addedTabId, removedTabId) {
-    console.log('tab replaced');
-    console.log(addedTabId , ' replaced ', removedTabId);
     if (removedTabId in requests) {
-        console.log('swapping data and setting page action');
         requests[addedTabId] = requests[removedTabId];
         delete requests[removedTabId];
     } else {
@@ -52,8 +37,6 @@ chrome.tabs.onReplaced.addListener(function(addedTabId, removedTabId) {
 });
 
 chrome.webNavigation.onDOMContentLoaded.addListener(function(details) {
-    console.log('completed navigation, DOMContentLoaded in tab: ', details.tabId, details.url, details.frameId);
-
     if (details.frameId > 0) {
         // we don't care about sub-frame requests
         return;
@@ -66,12 +49,11 @@ chrome.webNavigation.onDOMContentLoaded.addListener(function(details) {
 });
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-    console.log('ping from content script!', sender.tab);
-    sendResponse({});
     var request = requests[sender.tab.id];
     if (request) {
         request.setSPDYStatus(request.spdy);
     }
+    sendResponse({});
 });
 
 // clear request data when tabs are destroyed
@@ -112,15 +94,15 @@ Request.prototype.processRailgunHeader = function() {
 
     this.railgunMetaData = {};
 
-    if (!(typeof railgunHeader === "string")) {
+    if (!(typeof railgunHeader === 'string')) {
         return this.railgunMetaData;
     }
 
     // Railgun header can be in one of two formats
     // one of them will have the string "normal"
-    var railgunNormal = (railgunHeader.indexOf("normal") !== -1);
+    var railgunNormal = (railgunHeader.indexOf('normal') !== -1);
 
-    var parts = railgunHeader.split(" ");
+    var parts = railgunHeader.split(' ');
 
     var flagsBitset = 0;
 
@@ -130,8 +112,8 @@ Request.prototype.processRailgunHeader = function() {
         flagsBitset = parseInt(parts[1], 10);
         this.railgunMetaData['version'] = parts[3];
     } else {
-        this.railgunMetaData['compression'] = (100 - parts[1]) + "%";
-        this.railgunMetaData['time'] = parts[2] + "sec";
+        this.railgunMetaData['compression'] = (100 - parts[1]) + '%';
+        this.railgunMetaData['time'] = parts[2] + 'sec';
         flagsBitset = parseInt(parts[3], 10);
         this.railgunMetaData['version'] = parts[4];
     }
@@ -140,31 +122,31 @@ Request.prototype.processRailgunHeader = function() {
     var railgunFlags = {
         FLAG_DOMAIN_MAP_USED: {
             position: 0x01,
-            message: "map.file used to change IP"
+            message: 'map.file used to change IP'
         },
         FLAG_DEFAULT_IP_USED: {
             position: 0x02,
-            message: "map.file default IP used"
+            message: 'map.file default IP used'
         },
         FLAG_HOST_CHANGE: {
             position: 0x04,
-            message: "Host name change"
+            message: 'Host name change'
         },
         FLAG_REUSED_CONNECTION: {
             position: 0x08,
-            message: "Existing connection reused"
+            message: 'Existing connection reused'
         },
         FLAG_HAD_DICTIONARY: {
             position: 0x10,
-            message: "Railgun sender sent dictionary"
+            message: 'Railgun sender sent dictionary'
         },
         FLAG_WAS_CACHED: {
             position: 0x20,
-            message: "Dictionary found in memcache"
+            message: 'Dictionary found in memcache'
         },
         FLAG_RESTART_CONNECTION: {
             position: 0x40,
-            message: "Restarted broken origin connection"
+            message: 'Restarted broken origin connection'
         }
     };
 
@@ -194,7 +176,6 @@ Request.prototype.querySPDYStatusAndSetIcon = function() {
 
             var request = requests[tabID];
             request.SPDY = cs_msg_response.spdy;
-            console.log('got SPDY status');
             request.setPageActionIconAndPopup();
         }
         try {
@@ -204,7 +185,6 @@ Request.prototype.querySPDYStatusAndSetIcon = function() {
             console.log(chrome.extension.lastError());
             console.log(e);
         }
-        console.log('SPDY status query sent to tab: ', this.details.tabId);
     }
 };
 
@@ -282,9 +262,7 @@ Request.prototype.setSPDYStatus = function(status) {
 };
 
 Request.prototype.setPageActionIconAndPopup = function() {
-    console.log("called setPageActionIcon");
     var iconPath = this.getPageActionPath();
-    console.log(iconPath);
     var tabID = this.details.tabId;
     chrome.pageAction.setIcon({
         tabId: this.details.tabId,
@@ -293,9 +271,25 @@ Request.prototype.setPageActionIconAndPopup = function() {
         try {
             chrome.pageAction.setPopup({'tabId': tabID, 'popup': 'page_action_popup.html'});
             chrome.pageAction.show(tabID);
-            console.log("called page action show for ", tabID);
         } catch (e) {
             console.log('Exception on page action show for tab with ID: ', tabID, e);
         }
     });
+};
+
+Request.prototype.logToConsole = function() {
+    if (localStorage.getItem('debug_logging') !== 'yes') {
+        return;
+    }
+
+    console.log('\n');
+    console.log(this.details.url, this.details.ip, 'CF - ' + this.servedByCloudFlare());
+    console.log('Request - ', this.details);
+    if (this.servedByCloudFlare()) {
+        console.log('Ray ID - ', this.getRayID());
+    }
+    if (this.servedByRailgun()) {
+        var railgunMetaData = this.getRailgunMetaData();
+        console.log('Railgun - ', railgunMetaData['id'], railgunMetaData.messages.join('; '));
+    }
 };
