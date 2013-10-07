@@ -267,6 +267,7 @@ Request.prototype.setPageActionIconAndPopup = function() {
     var iconPath = this.getPageActionPath();
     var tabID = this.details.tabId;
 
+    // if the hide_icon setting is on then check there is a value to display
     if (localStorage.getItem('hide_icon') !== 'yes' || (this.servedByCloudFlare() || this.servedOverSPDY() || this.isv6IP())) {
         chrome.pageAction.setIcon({
             tabId: this.details.tabId,
