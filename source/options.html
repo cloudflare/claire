@@ -25,11 +25,17 @@
                 background-size: 32px;
                 
             }
+            label
+            {
+                display: block;
+                margin-bottom: 10px;
+            }
         </style>
     </head>
     <body id="options">
         <h1 id="options">Options</h1>
-        <input type="checkbox" label="Log debug messages" id="debug_log_checkbox" /> Log debug messages to console
+        <label><input type="checkbox" label="Hide icon when CloudFlare is not used" id="hide_icon_checkbox" /> Hide icon when CloudFlare is not used</label>
+        <label><input type="checkbox" label="Log debug messages" id="debug_log_checkbox" /> Log debug messages to console</label>
         <script src="options.js" type="text/javascript" charset="utf-8"></script>
     </body>
 </html>
