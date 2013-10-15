@@ -173,6 +173,12 @@ define([],function()
         return (this.getServerIP().indexOf(':') !== -1);
     };
 
+    Request.prototype.isDisplayable = function() {
+        var hasIconFeature = (this.servedByCloudFlare() || this.servedOverSPDY() || this.isv6IP());
+
+        return (localStorage.getItem('hide_icon') !== 'yes' || hasIconFeature);
+    };
+
     // figure out what the page action should be based on the
     // features we detected in this request
     Request.prototype.getPageActionPath = function() {
@@ -210,7 +216,7 @@ define([],function()
         var tabID = this.details.tabId;
  
         // if the hide_icon setting is on then check there is a value to display
-        if (localStorage.getItem('hide_icon') !== 'yes' || (this.servedByCloudFlare() || this.servedOverSPDY() || this.isv6IP())) {
+        if (this.isDisplayable()) {
             chrome.pageAction.setIcon({
                 tabId: this.details.tabId,
                 path: iconPath
