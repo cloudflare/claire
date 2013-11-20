@@ -9,7 +9,7 @@ define([
     'use strict';
 
     // a mapping of tab IDs to window.requests
-    window.window.requests = {};
+    window.requests = {};
 
     // listen to all web requests and when request is completed, create a new
     // Request object that contains a bunch of information about the request
