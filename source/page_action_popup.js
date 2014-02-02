@@ -15,9 +15,10 @@ chrome.tabs.query(queryInfo, function(tabs) {
     var ipType = (request.isv6IP())? "v6" : "v4";
     $("#ipAddress").addClass(ipType);
 
-    // show the Ray ID
+    // show the Ray ID & location
 	if (request.servedByCloudFlare()) {
 	    $("#rayID").text(request.getRayID());
+        $("#locationName").text(request.getCloudFlareLocation());
 	    $("#ray").show();
 	}
 
