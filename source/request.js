@@ -149,8 +149,13 @@ define([],function()
         return this.details.fromCache;
     };
 
+    // RAY ID header format: CF-RAY:f694c6892660106-DFW
     Request.prototype.getRayID = function() {
-        return this.headers['CF-RAY'];
+        return this.headers['CF-RAY'].split('-')[0];
+    };
+
+    Request.prototype.getCloudFlareLocation = function() {
+        return this.headers['CF-RAY'].split('-')[1];
     };
 
     Request.prototype.getTabID = function() {
