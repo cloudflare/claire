@@ -1,6 +1,8 @@
 # Claire
 
-Chrome extension that shows a page action to indicate whether a site is using [CloudFlare](http://www.cloudflare.com) or not
+Browser extension for Google Chrome that shows an icon in the address bar (page action) which turns orange when the site you are browsing is served by [CloudFlare](http://www.cloudflare.com).
+
+Clicking on the icon in the browser will show additional information about the request.
 
 
 ## Installation
