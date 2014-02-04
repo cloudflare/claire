@@ -1,5 +1,8 @@
-define([],function()
-{
+define([
+	'airports'
+], function(
+	airports
+){
 
     // the Request object, contains information about a request
     var Request = function(details) {
@@ -154,8 +157,22 @@ define([],function()
         return this.headers['CF-RAY'].split('-')[0];
     };
 
-    Request.prototype.getCloudFlareLocation = function() {
+    Request.prototype.getCloudFlareLocationCode = function() {
         return this.headers['CF-RAY'].split('-')[1];
+    };
+
+    Request.prototype.getCloudFlareLocationData = function() {
+        var locationCode = this.getCloudFlareLocationCode();
+		return airports[locationCode];
+    };
+
+    Request.prototype.getCloudFlareLocationName = function() {
+		var airportData = this.getCloudFlareLocationData();
+		if (airportData) {
+			return airportData["city"] + ", " + airportData["country"];
+		} else {
+			return this.getCloudFlareLocationCode();
+		}
     };
 
     Request.prototype.getTabID = function() {
