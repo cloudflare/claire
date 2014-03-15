@@ -1,10 +1,26 @@
-var debug_log_checkbox = document.getElementById('debug_log_checkbox');
+// list of checkbox id's
+var options =
+[
+	"hide_icon",
+	"debug_logging"
+];
 
-// check current debug state flag and change the checkbox accordingly
-debug_log_checkbox.checked = (localStorage.debug_logging === 'yes')? true : false;
+// go through each avaliable option
+for (var i = 0; i < options.length; i++) {
+	(function(option) {
+		var element = document.getElementById(option);
 
-// attach a click event to the debug log preference checkbox
-var debug_checkbox_clicked = function(e) {
-    localStorage.debug_logging = (e.target.checked)? 'yes' : 'no';
+		// set the value of the checkbox from localStorage
+		element.checked = getOptionValue(option);
+
+		// set the save function when the checkbox is changed
+		element.onclick = function(e) {
+			localStorage.setItem(option, (e.target.checked)? 'yes' : 'no');
+		}
+	})(options[i]);
 };
-debug_log_checkbox.onclick = debug_checkbox_clicked;
+
+// get a given options value from localStorage
+function getOptionValue(option) {
+	return localStorage.getItem(option) === 'yes';
+}

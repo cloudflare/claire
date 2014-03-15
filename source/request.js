@@ -195,6 +195,12 @@ define([
         return (this.getServerIP().indexOf(':') !== -1);
     };
 
+    Request.prototype.isDisplayable = function() {
+        var hasIconFeature = (this.servedByCloudFlare() || this.servedOverSPDY() || this.isv6IP());
+
+        return (localStorage.getItem('hide_icon') !== 'yes' || hasIconFeature);
+    };
+
     // figure out what the page action should be based on the
     // features we detected in this request
     Request.prototype.getPageActionPath = function() {
@@ -230,17 +236,21 @@ define([
     Request.prototype.setPageActionIconAndPopup = function() {
         var iconPath = this.getPageActionPath();
         var tabID = this.details.tabId;
-        chrome.pageAction.setIcon({
-            tabId: this.details.tabId,
-            path: iconPath
-        }, function() {
-            try {
-                chrome.pageAction.setPopup({'tabId': tabID, 'popup': 'page_action_popup.html'});
-                chrome.pageAction.show(tabID);
-            } catch (e) {
-                console.log('Exception on page action show for tab with ID: ', tabID, e);
-            }
-        });
+ 
+        // if the hide_icon setting is on then check there is a value to display
+        if (this.isDisplayable()) {
+            chrome.pageAction.setIcon({
+                tabId: this.details.tabId,
+                path: iconPath
+            }, function() {
+                try {
+                    chrome.pageAction.setPopup({'tabId': tabID, 'popup': 'page_action_popup.html'});
+                    chrome.pageAction.show(tabID);
+                } catch (e) {
+                    console.log('Exception on page action show for tab with ID: ', tabID, e);
+                }
+            });
+        };
     };
 
     Request.prototype.logToConsole = function() {
