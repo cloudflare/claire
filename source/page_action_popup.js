@@ -12,7 +12,7 @@ chrome.tabs.query(queryInfo, function(tabs) {
 
     $("#ip").text(request.getServerIP());
 
-    var ipType = (request.isv6IP())? "v6" : "v4";
+    var ipType = (request.isv6IP()) ? "v6" : "v4";
     $("#ipAddress").addClass(ipType);
 
 	// load the maps script and call addMap
