@@ -19,7 +19,11 @@
         "persistent": true
     },
     "page_action": {
-        "default_title": "CloudFlare"
+        "default_icon": {
+            "19": "images/claire-3-off.png"
+        },
+        "default_title": "CloudFlare",
+        "default_popup": "page_action_popup.html"
     },
     "content_scripts": [{
                             "matches": ["<all_urls>"],
