@@ -57,7 +57,8 @@ chrome.tabs.query(queryInfo, function(tabs) {
 		var infoWindowContent = '<div><p>Served from <b>'+ request.getCloudFlareLocationName() +'</b><br><a href="https://www.cloudflare.com/network-map" target="_blank">CloudFlare Network Map</a></p></div>'
 
 		var infowindow = new google.maps.InfoWindow({
-			content: infoWindowContent
+			content: infoWindowContent,
+			maxWidth: 200
 		});
 
 		google.maps.event.addListener(marker, 'click', function() {
