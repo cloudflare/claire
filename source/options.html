@@ -16,9 +16,9 @@
             h1 {
                 font-family: "Palatino", "Georgia", "serif";
                 border-bottom: 1px solid #efefef;
-                padding: 10px 0px;
+                padding: 10px 0;
                 padding-left: 40px;
-                margin: 30px 0px;
+                margin: 30px 0;
                 background-image: url('images/orange-cloud-128.png');
                 background-repeat: no-repeat;
                 background-position: left center;
@@ -29,7 +29,8 @@
     </head>
     <body id="options">
         <h1 id="options">Options</h1>
-        <input type="checkbox" label="Log debug messages" id="debug_log_checkbox" /> Log debug messages to console
+        <input type="checkbox" label="Log debug messages" id="debug_log_checkbox" />
+        <label for="debug_log_checkbox" style="vertical-align: middle;"> Log debug messages to console</label>
         <script src="options.js" type="text/javascript" charset="utf-8"></script>
     </body>
 </html>

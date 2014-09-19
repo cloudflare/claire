@@ -2,24 +2,25 @@
 <html>
     <head>
         <title>Claire</title>
-        <!-- <link rel="stylesheet" href="page_action_popup.css" type="text/css" media="no title" charset="utf-8" /> -->
         <style type="text/css" media="screen">
             body {
                 margin: 0;
-                font-family: "Helvetica", "sans-serif";
+                font-family: "Helvetica", sans-serif;
                 font-size: 0.8em;
                 line-height: 1.4em;
             }
             code {
-                font-family: "Source Code Pro", "Menlo", "Consolas", "Courier";
+                font-family: "Source Code Pro", "Menlo", "Consolas", "Courier", monospace;
                 background-color: #efefef;
                 border: 1px solid #dfdfdf;
                 border-radius: 3px;
                 padding: 2px 4px;
             }
             #claireInfoImage {
+                background-image: url("images/claire-3-popup.png");
                 margin: auto;
                 width: 250px;
+                height: 250px;
             }
             .feature_meta {
                 padding: 20px 10px;
@@ -30,22 +31,22 @@
             }
             .feature_meta ul {
                 list-style: none;
-                padding: 0px;
-                margin: 0px;
+                padding: 0;
+                margin: 0;
             }
             .feature_meta li {
                 padding: 5px 0;
             }
             #ray {
                 display: none;
-                border-left-color: #FB9D37;
+                border-left-color: #fb9d37;
             }
             #railgun {
                 display: none;
-                border-left-color: #BF1B2A;
+                border-left-color: #bf1b2a;
             }
             .v6 {
-                border-left-color: #2E7CBA;
+                border-left-color: #2e7cba;
             }
             .v4 {
                 border-left-color: #ddd;
@@ -59,9 +60,7 @@
         </style>
     </head>
     <body id="page_action_popup">
-        <div id="claireInfoImage">
-            <img src="images/claire-3-popup.png" />
-        </div>
+        <div id="claireInfoImage"></div>
         <div id="requestInfo">
             <div id="ipAddress" class="feature_meta">
                 IP Address: <code><span id="ip"></span></code>
@@ -81,7 +80,7 @@
                 </ul>
             </div>
         </div>
-        <script src="jquery-1.9.1.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="jquery.min.js" type="text/javascript" charset="utf-8"></script>
         <script src="page_action_popup.js" type="text/javascript" charset="utf-8"></script>
     </body>
 </html>
