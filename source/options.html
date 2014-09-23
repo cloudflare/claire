@@ -3,34 +3,23 @@
     <head>
         <meta http-equiv="Content-type" content="text/html; charset=utf-8">
         <title>Claire Options</title>
-        <style type="text/css" media="screen">
-            html {
-                background-color: #fefefe;
-                color: #555;
-            }
-            body {
-                width: 500px;
-                margin: 0 auto;
-                font-family: "Helvetica", "Verdana", "sans-serif";
-            }
-            h1 {
-                font-family: "Palatino", "Georgia", "serif";
-                border-bottom: 1px solid #efefef;
-                padding: 10px 0px;
-                padding-left: 40px;
-                margin: 30px 0px;
-                background-image: url('images/orange-cloud-128.png');
-                background-repeat: no-repeat;
-                background-position: left center;
-                background-size: 32px;
-                
-            }
-        </style>
+        <link href='http://fonts.googleapis.com/css?family=Open+Sans:400' rel='stylesheet' type='text/css'>
+        <link href="/style.css" rel="stylesheet"/>
     </head>
-    <body id="options">
-        <h1 id="options">Options</h1>
-        <input type="checkbox" label="Hide Icon Guide" id="claire_guide" /> Hide Claire's icon guide <br/>
-        <input type="checkbox" label="Log debug messages" id="debug_log_checkbox" /> Log debug messages to console
-        <script src="options.js" type="text/javascript" charset="utf-8"></script>
+    <body class="site-wrapper">
+      <header class="header">
+      </header>
+      <article class="wrapper">
+        <section class="modunit">
+          <header class="mod-header">
+            <h3 id="options">Claire Options</h3>
+          </header>
+          <section class="mod-content">
+            <input type="checkbox" id="claire_guide" /> Hide Claire's icon guide <br/>
+            <input type="checkbox" id="debug_log_checkbox" /> Log debug messages to console
+          </section>
+          <script src="options.js" type="text/javascript" charset="utf-8"></script>
+        </section>
+      </article>
     </body>
 </html>
