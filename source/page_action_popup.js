@@ -4,6 +4,10 @@ var queryInfo = {
     active: true,
     windowId: chrome.windows.WINDOW_ID_CURRENT
 };
+
+if (localStorage.hide_guide === 'yes') {
+	$('#claireInfoImage').hide();
+}
 chrome.tabs.query(queryInfo, function(tabs) {
     var tabID = tabs[0].id;
     // get the extension's window object

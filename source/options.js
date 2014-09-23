@@ -8,3 +8,12 @@ var debug_checkbox_clicked = function(e) {
     localStorage.debug_logging = (e.target.checked)? 'yes' : 'no';
 };
 debug_log_checkbox.onclick = debug_checkbox_clicked;
+
+var claire_guide_checkbox = document.getElementById('claire_guide');
+
+claire_guide_checkbox.checked = (localStorage.hide_guide === 'yes')? true : false;
+
+var claire_guide_clicked = function(e) {
+    localStorage.hide_guide = (e.target.checked)? 'yes' : 'no';
+}
+claire_guide_checkbox.onclick = claire_guide_clicked;
