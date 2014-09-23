@@ -26,5 +26,5 @@
                             "run_at": "document_start"
                         }],
     "options_page": "options.html",
-    "content_security_policy": "object-src 'self'; script-src 'self' 'unsafe-eval' https://*.googleapis.com https://maps.gstatic.com;"
+    "content_security_policy": "object-src 'self'; script-src 'self' 'unsafe-eval';"
 }
