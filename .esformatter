@@ -1,0 +1,27 @@
+{
+	"indent": {
+		"value": "\t"
+	},
+	"whiteSpace": {
+		"before": {
+			"ArrayExpressionClosing": 1,
+			"ForInStatementClosing": 1,
+			"IfStatementConditionalClosing": 1,
+			"SwitchDiscrimationClosing": 1,
+			"ArgumentList": 1,
+			"ParameterList": 1,
+			"ExpressionClosingParentheses": 1
+		},
+		"after": {
+			"ArrayExpressionOpening": 1,
+			"ForInStatementOpening": 1,
+			"IfStatementConditionalOpening": 1,
+			"SwitchDiscrimationtOpening": 1,
+			"ArgumentList": 1,
+			"ParameterList": 1,
+			"ExpressionOpeningParentheses": 1,
+			"PropertyName": 1
+		}
+	}
+}
+

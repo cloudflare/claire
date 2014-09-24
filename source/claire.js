@@ -1,68 +1,64 @@
 // Claire
+/* global define */
+define([ 'request' ], function( Request ) {
+	'use strict';
 
-define([
-    'request'
-], function(
-    Request
-) {
+	// a mapping of tab IDs to window.requests
+	window.requests = {};
 
-    'use strict';
+	// listen to all web requests and when request is completed, create a new
+	// Request object that contains a bunch of information about the request
+	var processCompletedRequest = function( details ) {
+		var request = new Request( details );
+		window.requests[details.tabId] = request;
+		request.logToConsole();
+	};
 
-    // a mapping of tab IDs to window.requests
-    window.requests = {};
+	var filter = {
+		urls : [ '<all_urls>' ],
+		types : [ 'main_frame' ]
+	};
 
-    // listen to all web requests and when request is completed, create a new
-    // Request object that contains a bunch of information about the request
+	var extraInfoSpec = [ 'responseHeaders' ];
 
-    var processCompletedRequest = function(details) {
-        var request = new Request(details);
-        window.requests[details.tabId] = request;
-        request.logToConsole();
-    };
+	// start listening to all web window.requests
+	chrome.webRequest.onCompleted.addListener( processCompletedRequest, filter, extraInfoSpec );
 
-    var filter = {
-        urls: ['<all_urls>'],
-        types: ['main_frame']
-    };
+	// when a tab is replaced, usually when a request started in a background tab
+	// and then the tab is upgraded to a regular tab (becomes visible)
+	chrome.tabs.onReplaced.addListener(function( addedTabId, removedTabId ) {
+		if ( removedTabId in window.requests ) {
+			window.requests[addedTabId] = window.requests[removedTabId];
+			delete window.requests[removedTabId];
+		} else {
+			console.log( 'Could not find an entry in window.requests when replacing ', removedTabId );
+		}
 
-    var extraInfoSpec = ['responseHeaders'];
+	});
 
-    // start listening to all web window.requests
-    chrome.webRequest.onCompleted.addListener(processCompletedRequest, filter, extraInfoSpec);
+	chrome.webNavigation.onDOMContentLoaded.addListener(function( details ) {
+		if ( details.frameId > 0 ) {
+			// we don't care about sub-frame window.requests
+			return;
+		}
 
-    // when a tab is replaced, usually when a request started in a background tab
-    // and then the tab is upgraded to a regular tab (becomes visible)
-    chrome.tabs.onReplaced.addListener(function(addedTabId, removedTabId) {
-        if (removedTabId in window.requests) {
-            window.requests[addedTabId] = window.requests[removedTabId];
-            delete window.requests[removedTabId];
-        } else {
-            console.log('Could not find an entry in window.requests when replacing ', removedTabId);
-        }
+		if ( details.tabId in window.requests ) {
+			var request = window.requests[details.tabId];
+			request.querySPDYStatusAndSetIcon();
+		}
+	});
 
-    });
+	chrome.runtime.onMessage.addListener(function( csRequest, sender, sendResponse ) {
+		var request = window.requests[sender.tab.id];
+		if ( request ) {
+			request.setSPDYStatus( csRequest.spdy );
+		}
+		sendResponse({});
+	});
 
-    chrome.webNavigation.onDOMContentLoaded.addListener(function(details) {
-        if (details.frameId > 0) {
-            // we don't care about sub-frame window.requests
-            return;
-        }
-
-        if (details.tabId in window.requests) {
-            var request = window.requests[details.tabId];
-            request.querySPDYStatusAndSetIcon();
-        }
-    });
-
-    chrome.runtime.onMessage.addListener(function(csRequest, sender, sendResponse) {
-        var request = window.requests[sender.tab.id];
-        if (request) {
-            request.setSPDYStatus(csRequest.spdy);
-        }
-        sendResponse({});
-    });
-
-    // clear request data when tabs are destroyed
-    chrome.tabs.onRemoved.addListener(function(tabId, removeInfo) { delete window.requests[tabId]; });
-
+	// clear request data when tabs are destroyed
+	chrome.tabs.onRemoved.addListener(function( tabId ) {
+		delete window.requests[tabId];
+	});
 });
+
