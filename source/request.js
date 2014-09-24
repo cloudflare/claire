@@ -97,7 +97,7 @@ define([ 'airports' ], function( airports ) {
 		var messages = [];
 
 		for (var flagKey in railgunFlags) {
-			if ( railgunFlags.hasOwnPropery( flagKey ) ) {
+			if ( railgunFlags.hasOwnProperty( flagKey ) ) {
 				var flag = railgunFlags[flagKey];
 				/*jshint bitwise: false*/
 				if ( ( flagsBitset & flag.position ) !== 0 ) {
