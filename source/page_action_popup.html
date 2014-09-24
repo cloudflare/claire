@@ -9,60 +9,58 @@
                 margin: auto;
                 width: 250px;
             }
-            .feature_meta {
-                padding: 20px 10px;
-                border-left: 10px solid;
-            }
-            .feature_meta:last-of-type {
-                border-bottom: none;
-            }
-            .feature_meta ul {
-                list-style: none;
-                padding: 0px;
-                margin: 0px;
-            }
-            .feature_meta li {
-                padding: 5px 0;
-            }
-            #ray {
-                display: none;
-                border-left-color: #FB9D37;
-            }
-            #railgun {
-                display: none;
-                border-left-color: #BF1B2A;
-            }
-            .v6 {
-                border-left-color: #2E7CBA;
-            }
-            .v4 {
-                border-left-color: #ddd;
+            #ray, #loc, #railgun {
+              display: none;
             }
         </style>
     </head>
-    <body id="page_action_popup">
+    <body class="site-wrapper" style="min-width: 400px">
+      <header class="header">
+      </header>
+      <article class="popup-wrapper">
         <div id="claireInfoImage">
-            <img src="images/claire-3-popup.png" />
+          <img src="images/claire-3-popup.jpg" alt="" />
         </div>
         <div id="requestInfo">
-            <div id="ipAddress" class="feature_meta">
-                IP Address: <code><span id="ip"></span></code>
-            </div>
-            <div id="ray" class="feature_meta">
-                Ray ID: <code><span id="rayID"></span></code>
-                <br><br>
-                Location: <span id="locationCode"></span>
-                <div id="locationName"></div>
-            </div>
-            <div id="railgun" class="feature_meta">
-                <ul>
-                    <li>Railgun ID: <code><span id="railgunID"></span></code></li>
-                    <li>Compression: <span id="railgunCompression"></span></li>
-                    <li>Time: <span id="railgunTime"></span></li>
-                </ul>
-            </div>
+          <section id="ipAddress" class="modunit modunit-mini">
+            <header class="mod-header">
+              <h3>IP Adress</h3>
+            </header>
+            <section class="mod-content">
+              <code><span id="ip"></span></code>
+            </section>
+          </section>
+          <section id="ray" class="modunit modunit-mini">
+            <header class="mod-header">
+              <h3>Ray ID</h3>
+            </header>
+            <section class="mod-content">
+              <code><span id="rayID"></span></code>
+            </section>
+          </section>
+          <section id="loc" class="modunit modunit-mini">
+            <header class="mod-header">
+              <h3>Location</h3>
+            </header>
+            <section class="mod-content">
+              <p><span id="locationName"></span> (<span id="locationCode"></span>)</p>
+            </section>
+          </section>
+          <section id="railgun" class="modunit modunit-mini">
+            <header class="mod-header">
+              <h3>Railgun</h3>
+            </header>
+            <section class="mod-content">
+              <ul>
+                <li>Railgun ID: <code><span id="railgunID"></span></code></li>
+                <li>Compression: <span id="railgunCompression"></span></li>
+                <li>Time: <span id="railgunTime"></span></li>
+              </ul>
+            </section>
+          </section>
         </div>
-        <script src="jquery-1.9.1.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="page_action_popup.js" type="text/javascript" charset="utf-8"></script>
+      </article>
+      <script src="jquery-1.9.1.min.js" type="text/javascript" charset="utf-8"></script>
+      <script src="page_action_popup.js" type="text/javascript" charset="utf-8"></script>
     </body>
 </html>

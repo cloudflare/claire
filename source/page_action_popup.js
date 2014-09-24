@@ -25,6 +25,7 @@ chrome.tabs.query(queryInfo, function(tabs) {
         $("#locationCode").text(request.getCloudFlareLocationCode());
 		$("#locationName").text(request.getCloudFlareLocationName());
 	    $("#ray").show();
+	    $("#loc").show();
 	}
 
     // show Railgun related info
