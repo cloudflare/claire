@@ -158,6 +158,10 @@ define([ 'airports' ], function( airports ) {
 		return this.details.fromCache;
 	};
 
+	Request.prototype.getCacheStatus = function() {
+		return ( 'CF-CACHE-STATUS' in this.headers ) && this.headers['CF-CACHE-STATUS'];
+	};
+
 	// RAY ID header format: CF-RAY:f694c6892660106-DFW
 	Request.prototype.getRayID = function() {
 		return this.headers['CF-RAY'].split( '-' )[0];
