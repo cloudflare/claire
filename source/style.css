@@ -89,3 +89,10 @@ pre code {
   line-height: 1;
   margin-bottom: 0.5rem;
 }
+#claireInfoImage {
+  margin: auto;
+  width: 250px;
+}
+.hidden {
+  display: none;
+}

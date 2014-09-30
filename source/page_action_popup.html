@@ -4,15 +4,6 @@
         <title>Claire</title>
         <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
         <link href="/style.css" rel="stylesheet"/>
-        <style type="text/css" media="screen">
-            #claireInfoImage {
-                margin: auto;
-                width: 250px;
-            }
-            #ray, #loc, #railgun {
-              display: none;
-            }
-        </style>
     </head>
     <body class="site-wrapper" style="min-width: 400px">
       <header class="header">
@@ -30,7 +21,7 @@
               <code><span id="ip"></span></code>
             </section>
           </section>
-          <section id="ray" class="modunit modunit-mini">
+          <section id="ray" class="modunit modunit-mini hidden">
             <header class="mod-header">
               <h3>Ray ID</h3>
             </header>
@@ -38,7 +29,7 @@
               <code><span id="rayID"></span></code>
             </section>
           </section>
-          <section id="loc" class="modunit modunit-mini">
+          <section id="loc" class="modunit modunit-mini hidden">
             <header class="mod-header">
               <h3>Location</h3>
             </header>
@@ -46,7 +37,7 @@
               <p><span id="locationName"></span> (<span id="locationCode"></span>)</p>
             </section>
           </section>
-          <section id="railgun" class="modunit modunit-mini">
+          <section id="railgun" class="modunit modunit-mini hidden">
             <header class="mod-header">
               <h3>Railgun</h3>
             </header>
@@ -60,7 +51,6 @@
           </section>
         </div>
       </article>
-      <script src="jquery-1.9.1.min.js" type="text/javascript" charset="utf-8"></script>
       <script src="page_action_popup.js" type="text/javascript" charset="utf-8"></script>
     </body>
 </html>
