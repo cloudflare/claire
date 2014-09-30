@@ -9,7 +9,7 @@
 	};
 
 	if ( localStorage.hide_guide === 'yes' ) {
-		$( '#claireInfoImage' ).hide();
+		document.getElementById( 'claireInfoImage' ).classList.add( 'hidden' );
 	}
 
 	chrome.tabs.query( queryInfo, function( tabs ) {
@@ -18,27 +18,26 @@
 		var extensionWindow = chrome.extension.getBackgroundPage();
 		var request = extensionWindow.requests[tabID];
 
-		$( '#ip' ).text( request.getServerIP() );
+		document.getElementById( 'ip' ).textContent = request.getServerIP();
 
 		// show the Ray ID & location
 		if ( request.servedByCloudFlare() ) {
-			$( '#rayID' ).text( request.getRayID() );
-			$( '#locationCode' ).text( request.getCloudFlareLocationCode() );
-			$( '#locationName' ).text( request.getCloudFlareLocationName() );
-			$( '#ray' ).show();
-			$( '#loc' ).show();
+			document.getElementById( 'rayID' ).textContent = request.getRayID();
+			document.getElementById( 'locationCode' ).textContent = request.getCloudFlareLocationCode();
+			document.getElementById( 'locationName' ).textContent = request.getCloudFlareLocationName();
+			document.getElementById( 'ray' ).classList.remove( 'hidden' );
+			document.getElementById( 'loc' ).classList.remove( 'hidden' );
 		}
 
 		// show Railgun related info
 		if ( request.servedByRailgun() ) {
 			var railgunMetaData = request.getRailgunMetaData();
-			$( '#railgunID' ).text( railgunMetaData.id );
+			document.getElementById( 'railgunID' ).textContent = railgunMetaData.id;
 			if ( !railgunMetaData.normal ) {
-				$( '#railgunCompression' ).text( railgunMetaData.compression );
-				$( '#railgunTime' ).text( railgunMetaData.time );
+				document.getElementById( 'railgunCompression' ).textContent = railgunMetaData.compression;
+				document.getElementById( 'railgunTime' ).textContent = railgunMetaData.time;
 			}
-			$( '#railgun' ).show();
+			document.getElementById( 'railgun' ).classList.remove( 'hidden' );
 		}
 	});
 }());
-
