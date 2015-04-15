@@ -204,7 +204,15 @@ define([ 'airports' ], function( airports ) {
 	// figure out what the page action should be based on the
 	// features we detected in this request
 	Request.prototype.getPageActionPath = function() {
-		var iconPath = 'images/claire-3-';
+		return this.getImagePath('images/claire-3-');
+	};
+	
+	Request.prototype.getPopupPath = function() {
+		return this.getImagePath('images/claire-3-popup-');
+	};
+
+	Request.prototype.getImagePath = function(basePath) {
+		var iconPath = basePath;
 		var iconPathParts = [];
 
 		if ( this.servedByCloudFlare() ) {

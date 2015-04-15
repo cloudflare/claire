@@ -19,6 +19,8 @@
 		var request = extensionWindow.requests[tabID];
 
 		$( '#ip' ).text( request.getServerIP() );
+		
+		$( '#claireInfoImage img' ).attr( 'src', request.getPopupPath() );
 
 		// show the Ray ID & location
 		if ( request.servedByCloudFlare() ) {
