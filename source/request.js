@@ -212,7 +212,6 @@ define([ 'airports' ], function( airports ) {
 	};
 
 	Request.prototype.getImagePath = function(basePath) {
-		var iconPath = basePath;
 		var iconPathParts = [];
 
 		if ( this.servedByCloudFlare() ) {
@@ -233,7 +232,7 @@ define([ 'airports' ], function( airports ) {
 			iconPathParts.push( 'rg' );
 		}
 
-		return iconPath + iconPathParts.join( '-' ) + '.png';
+		return basePath + iconPathParts.join( '-' ) + '.png';
 	};
 
 	Request.prototype.setSPDYStatus = function( status ) {
