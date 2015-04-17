@@ -194,7 +194,7 @@ define([ 'airports' ], function( airports ) {
 	};
 
 	Request.prototype.getServerIP = function() {
-		return this.details.ip;
+		return (this.details.ip) ? this.details.ip : '';
 	};
 
 	Request.prototype.isv6IP = function() {
