@@ -44,7 +44,9 @@ define([ 'request' ], function( Request ) {
 
 		if ( details.tabId in window.requests ) {
 			var request = window.requests[details.tabId];
-			request.querySPDYStatusAndSetIcon();
+			if ( ! request.details.fromCache ) {
+				request.querySPDYStatusAndSetIcon();
+			}
 		}
 	});
 
