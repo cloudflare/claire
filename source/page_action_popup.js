@@ -29,6 +29,12 @@
 			$( '#locationName' ).text( request.getCloudFlareLocationName() );
 			$( '#ray' ).show();
 			$( '#loc' ).show();
+
+			var cacheStatus = request.getCacheStatus();
+			if ( cacheStatus ) {
+				document.getElementById( 'cacheStatus' ).textContent = cacheStatus;
+				document.getElementById( 'cache' ).classList.remove( 'hidden' );
+			}
 		}
 
 		// show Railgun related info
