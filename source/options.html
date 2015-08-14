@@ -1,25 +1,29 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta http-equiv="Content-type" content="text/html; charset=utf-8">
-        <title>Claire Options</title>
-        <link href='http://fonts.googleapis.com/css?family=Open+Sans:400' rel='stylesheet' type='text/css'>
-        <link href="/style.css" rel="stylesheet"/>
-    </head>
-    <body class="site-wrapper">
-      <header class="header">
+  <head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Claire Options</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/pure-min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/grids-responsive-min.css">
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <section class="card">
+      <header class="card-header">
+        <h2 class="card-title">Claire Options</h2>
       </header>
-      <article class="wrapper">
-        <section class="modunit">
-          <header class="mod-header">
-            <h3 id="options">Claire Options</h3>
-          </header>
-          <section class="mod-content">
-            <input type="checkbox" id="claire_guide" /> Hide Claire's icon guide <br/>
-            <input type="checkbox" id="debug_log_checkbox" /> Log debug messages to console
-          </section>
-          <script src="options.js" type="text/javascript" charset="utf-8"></script>
-        </section>
-      </article>
-    </body>
+      <section class="card-body">
+        <form class="pure-form pure-form-stacked">
+          <label for="claire_guide" class="pure-checkbox">
+            <input id="claire_guide" type="checkbox"> Hide Claire's icon guide
+          </label>
+          <label for="debug_log_checkbox" class="pure-checkbox">
+            <input id="debug_log_checkbox" type="checkbox"> Log debug messages to console
+          </label>
+        </form>
+      </section>
+    </section>
+    <script src="options.js" type="text/javascript" charset="utf-8"></script>
+  </body>
 </html>

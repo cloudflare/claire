@@ -8,6 +8,7 @@
     },
     "permissions": [
                         "tabs",
+                        "clipboardWrite",
                         "webNavigation",
                         "webRequest",
                         "http://*/",

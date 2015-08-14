@@ -1,66 +1,69 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Claire</title>
-        <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
-        <link href="/style.css" rel="stylesheet"/>
-        <style type="text/css" media="screen">
-            #claireInfoImage {
-                margin: auto;
-                width: 250px;
-            }
-            #ray, #loc, #railgun {
-              display: none;
-            }
-        </style>
-    </head>
-    <body class="site-wrapper" style="min-width: 400px">
-      <header class="header">
-      </header>
-      <article class="popup-wrapper">
-        <div id="claireInfoImage">
-          <img src="images/claire-3-popup.jpg" alt="" />
-        </div>
-        <div id="requestInfo">
-          <section id="ipAddress" class="modunit modunit-mini">
-            <header class="mod-header">
-              <h3>IP Address</h3>
-            </header>
-            <section class="mod-content">
-              <code><span id="ip"></span></code>
-            </section>
-          </section>
-          <section id="ray" class="modunit modunit-mini">
-            <header class="mod-header">
-              <h3>Ray ID</h3>
-            </header>
-            <section class="mod-content">
-              <code><span id="rayID"></span></code>
-            </section>
-          </section>
-          <section id="loc" class="modunit modunit-mini">
-            <header class="mod-header">
-              <h3>Location</h3>
-            </header>
-            <section class="mod-content">
-              <p><span id="locationName"></span> (<span id="locationCode"></span>)</p>
-            </section>
-          </section>
-          <section id="railgun" class="modunit modunit-mini">
-            <header class="mod-header">
-              <h3>Railgun</h3>
-            </header>
-            <section class="mod-content">
-              <ul>
-                <li>Railgun ID: <code><span id="railgunID"></span></code></li>
-                <li>Compression: <span id="railgunCompression"></span></li>
-                <li>Time: <span id="railgunTime"></span></li>
-              </ul>
-            </section>
-          </section>
-        </div>
-      </article>
-      <script src="jquery-1.9.1.min.js" type="text/javascript" charset="utf-8"></script>
-      <script src="page_action_popup.js" type="text/javascript" charset="utf-8"></script>
-    </body>
+  <head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Claire</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/pure-min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/grids-responsive-min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/octicons/3.0.1/octicons.min.css">
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <div id="claireInfoImage">
+      <img src="images/claire-3-popup.jpg" alt="" />
+    </div>
+    <div id="requestInfo">
+      <section id="ipAddress" class="card">
+        <header class="card-header">
+          <h2 class="card-title">IP Address</h2>
+        </header>
+        <form class="card-body pure-form pure-g">
+          <div class="pure-u-5-6">
+            <input id="ip" type="text" class="pure-input-1 is-monospaced" readonly>
+          </div>
+          <div class="pure-u-1-6">
+            <button data-copy-id="ip" class="pure-button pure-button-primary pure-input-1 octicon octicon-clippy copy-button" title="Copy"></button>
+          </div>
+        </form>
+      </section>
+      <section id="ray" class="card">
+        <header class="card-header">
+          <h2 class="card-title">Ray ID</h2>
+        </header>
+        <section class="card-body">
+          <form class="pure-form pure-g">
+            <div class="pure-u-5-6">
+              <input id="rayID" type="text" class="pure-input-1 is-monospaced" readonly>
+            </div>
+            <div class="pure-u-1-6">
+              <button data-copy-id="rayID" class="pure-button pure-button-primary pure-input-1 octicon octicon-clippy copy-button" title="Copy"></button>
+            </div>
+          </form>
+        </section>
+      </section>
+      <section id="loc" class="card">
+        <header class="card-header">
+          <h2 class="card-title">Location</h2>
+        </header>
+        <section class="card-body">
+          <p><span id="locationName"></span> (<span id="locationCode"></span>)</p>
+        </section>
+      </section>
+      <section id="railgun" class="card">
+        <header class="card-header">
+          <h2 class="card-title">Railgun</h2>
+        </header>
+        <section class="card-body">
+          <ul>
+            <li>Railgun ID: <code><span id="railgunID"></span></code></li>
+            <li>Compression: <span id="railgunCompression"></span></li>
+            <li>Time: <span id="railgunTime"></span></li>
+          </ul>
+        </section>
+      </section>
+    </div>
+    <script src="jquery-1.9.1.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="page_action_popup.js" type="text/javascript" charset="utf-8"></script>
+  </body>
 </html>
