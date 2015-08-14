@@ -14,11 +14,11 @@ a {
   text-decoration: none;
 }
 
-a::focus {
+a:focus {
   color: #62a1d8;
 }
 
-a::hover {
+a:hover {
   color: #ff7900;
 }
 
