@@ -2,6 +2,7 @@
 body {
   background: #ebebeb;
   color: #333;
+  min-width: 250px;
 }
 
 ::selection {
