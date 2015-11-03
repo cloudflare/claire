@@ -206,7 +206,7 @@ define([ 'airports' ], function( airports ) {
 	Request.prototype.getPageActionPath = function() {
 		return this.getImagePath('images/claire-3-');
 	};
-	
+
 	Request.prototype.getPopupPath = function() {
 		return this.getImagePath('images/claire-3-popup-');
 	};
@@ -278,4 +278,3 @@ define([ 'airports' ], function( airports ) {
 
 	return Request;
 });
-
