@@ -1,0 +1,20 @@
+{
+  "dependencies": {
+    "xo": "^0.11.0"
+  },
+  "xo": {
+    "envs": [
+      "browser"
+    ],
+    "globals": [
+      "chrome"
+    ],
+    "ignores": [
+      "source/{airports,jquery-1.9.1.min,require}.js"
+    ],
+    "space": true
+  },
+  "scripts": {
+    "test": "xo"
+  }
+}

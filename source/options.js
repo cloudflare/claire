@@ -1,24 +1,24 @@
-(function() {
-	'use strict';
-	var debug_log_checkbox = document.getElementById( 'debug_log_checkbox' );
+(function () {
+  'use strict';
+  var debugLogCheckbox = document.getElementById('debug_log_checkbox');
 
-	// check current debug state flag and change the checkbox accordingly
-	debug_log_checkbox.checked = ( localStorage.debug_logging === 'yes' ) ? true : false;
+  // check current debug state flag and change the checkbox accordingly
+  debugLogCheckbox.checked = localStorage.debug_logging === 'yes';
 
-	// attach a click event to the debug log preference checkbox
-	var debug_checkbox_clicked = function( e ) {
-		localStorage.debug_logging = ( e.target.checked ) ? 'yes' : 'no';
-	};
-	debug_log_checkbox.onclick = debug_checkbox_clicked;
+  // attach a click event to the debug log preference checkbox
+  var debugCheckboxClicked = function (e) {
+    localStorage.debug_logging = e.target.checked ? 'yes' : 'no'; // eslint-disable-line camelcase
+  };
+  debugLogCheckbox.onclick = debugCheckboxClicked;
 
-	var claire_guide_checkbox = document.getElementById( 'claire_guide' );
+  var claireGuideCheckbox = document.getElementById('claire_guide');
 
-	claire_guide_checkbox.checked = ( localStorage.hide_guide === 'yes' ) ? true : false;
+  claireGuideCheckbox.checked = localStorage.hide_guide === 'yes';
 
-	var claire_guide_clicked = function( e ) {
-		localStorage.hide_guide = ( e.target.checked ) ? 'yes' : 'no';
-	};
+  var claireGuideClicked = function (e) {
+    localStorage.hide_guide = e.target.checked ? 'yes' : 'no'; // eslint-disable-line camelcase
+  };
 
-	claire_guide_checkbox.onclick = claire_guide_clicked;
-}());
+  claireGuideCheckbox.onclick = claireGuideClicked;
+})();
 
