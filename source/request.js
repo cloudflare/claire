@@ -13,8 +13,9 @@ define([ 'airports' ], function( airports ) {
 		// weather the request object knows about the SPDY status or not
 		// this status is available in the context of the page, requires message passing
 		// from the extension to the page
-		this.hasSPDYStatus = false;
+		this.hasConnectionInfo = false;
 		this.SPDY = false;
+		this.connectionType = null;
 
 		this.preProcessHeaders();
 	};
@@ -111,13 +112,13 @@ define([ 'airports' ], function( airports ) {
 
 	};
 
-	Request.prototype.querySPDYStatusAndSetIcon = function() {
+	Request.prototype.queryConnectionInfoAndSetIcon = function() {
 		var tabID = this.details.tabId;
-		if ( this.hasSPDYStatus ) {
+		if ( this.hasConnectionInfo ) {
 			this.setPageActionIconAndPopup();
 		} else {
 			var csMessageData = {
-				'action' : 'check_spdy_status'
+				'action' : 'check_connection_info'
 			};
 			var csMessageCallback = function( csMsgResponse ) {
 				// stop and return if we don't get a response, happens with hidden/background tabs
@@ -126,7 +127,7 @@ define([ 'airports' ], function( airports ) {
 				}
 
 				var request = window.requests[tabID];
-				request.setSPDYStatus( csMsgResponse.spdy );
+				request.setConnectionInfo( csMsgResponse );
 				request.setPageActionIconAndPopup();
 			};
 
@@ -151,7 +152,11 @@ define([ 'airports' ], function( airports ) {
 	};
 
 	Request.prototype.servedOverSPDY = function() {
-		return this.SPDY;
+		return this.SPDY && this.connectionType.match(/^spdy/);
+	};
+
+	Request.prototype.servedOverH2 = function() {
+		return this.SPDY && this.connectionType === 'h2';
 	};
 
 	Request.prototype.ServedFromBrowserCache = function() {
@@ -222,6 +227,8 @@ define([ 'airports' ], function( airports ) {
 
 		if ( this.servedOverSPDY() ) {
 			iconPathParts.push( 'spdy' );
+		} else if ( this.servedOverH2() ) {
+			iconPathParts.push( 'h2' );
 		}
 
 		if ( this.isv6IP() ) {
@@ -235,9 +242,10 @@ define([ 'airports' ], function( airports ) {
 		return basePath + iconPathParts.join( '-' ) + '.png';
 	};
 
-	Request.prototype.setSPDYStatus = function( status ) {
-		this.hasSPDYStatus = true;
-		this.SPDY = status;
+	Request.prototype.setConnectionInfo = function(connectionInfo) {
+		this.hasConnectionInfo = true;
+		this.SPDY = connectionInfo.spdy;
+		this.connectionType = connectionInfo.type
 	};
 
 	Request.prototype.setPageActionIconAndPopup = function() {

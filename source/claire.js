@@ -45,7 +45,7 @@ define([ 'request' ], function( Request ) {
 		if ( details.tabId in window.requests ) {
 			var request = window.requests[details.tabId];
 			if ( ! request.details.fromCache ) {
-				request.querySPDYStatusAndSetIcon();
+				request.queryConnectionInfoAndSetIcon();
 			}
 		}
 	});
@@ -53,7 +53,7 @@ define([ 'request' ], function( Request ) {
 	chrome.runtime.onMessage.addListener(function( csRequest, sender, sendResponse ) {
 		var request = window.requests[sender.tab.id];
 		if ( request ) {
-			request.setSPDYStatus( csRequest.spdy );
+			request.setConnectionInfo( csRequest );
 		}
 		sendResponse({});
 	});
