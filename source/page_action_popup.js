@@ -38,9 +38,11 @@
       $('#rayID').val(request.getRayID());
       $('#locationCode').text(request.getCloudFlareLocationCode());
       $('#locationName').text(request.getCloudFlareLocationName());
+      $('#traceURL').attr('href', request.getCloudFlareTrace());
     } else {
       $('#ray').attr('hidden', true);
       $('#loc').attr('hidden', true);
+      $('#trace').attr('hidden', true);
     }
 
     // show Railgun related info
@@ -56,4 +58,3 @@
     }
   });
 })();
-
