@@ -181,6 +181,12 @@ define(['airports'], function (airports) {
     return this.getCloudFlareLocationCode();
   };
 
+  Request.prototype.getCloudFlareTrace = function () {
+    var traceURL = new URL(this.details.url);
+    traceURL.pathname = '/cdn-cgi/trace';
+    return traceURL.toString();
+  };
+
   Request.prototype.getTabID = function () {
     return this.details.tabId;
   };
@@ -281,4 +287,3 @@ define(['airports'], function (airports) {
 
   return Request;
 });
-
