@@ -181,6 +181,14 @@ define(['airports'], function (airports) {
     return this.getCloudFlareLocationCode();
   };
 
+  Request.prototype.getCloudFlareTrace = function () {
+    // Use the URL object that is returned via tabID to match a domain
+    // e.g. http://www.example.com/subfolder/item would result in http://www.example.com
+    var traceDomain = this.details.url.match(/^[\w-]+:\/*\[?([\w\.:-]+)\]?(?::\d+)?/)[0];
+    var traceURL = traceDomain + '/cdn-cgi/trace';
+    return traceURL;
+  };
+
   Request.prototype.getTabID = function () {
     return this.details.tabId;
   };
@@ -281,4 +289,3 @@ define(['airports'], function (airports) {
 
   return Request;
 });
-
