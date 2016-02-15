@@ -182,11 +182,9 @@ define(['airports'], function (airports) {
   };
 
   Request.prototype.getCloudFlareTrace = function () {
-    // Use the URL object that is returned via tabID to match a domain
-    // e.g. http://www.example.com/subfolder/item would result in http://www.example.com
-    var traceDomain = this.details.url.match(/^[\w-]+:\/*\[?([\w\.:-]+)\]?(?::\d+)?/)[0];
-    var traceURL = traceDomain + '/cdn-cgi/trace';
-    return traceURL;
+    var traceURL = new URL(this.details.url);
+    traceURL.pathname = '/cdn-cgi/trace';
+    return traceURL.toString();
   };
 
   Request.prototype.getTabID = function () {
