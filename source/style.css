@@ -47,12 +47,21 @@ a:focus {
   margin-left: auto;
 }
 
-/* State Rules */
+/* Input/Copy Rules */
 .is-monospaced {
   font-family: monospace;
 }
 
-/* Shame Rules */
 button.octicon {
-  font-size: 1em;
+  font-size: 0.99em;
+}
+
+.copy-button {
+  height: 25px!important;
+  border-radius: 0px 2px 2px 0px!important;
+}
+
+.copy-input {
+  height: 25px!important;
+  border-radius: 4px 0px 0px 4px!important;
 }
