@@ -143,7 +143,7 @@ define(['airports'], function (airports) {
   };
 
   Request.prototype.servedByRailgun = function () {
-    return ('CF-RAILGUN' in this.headers);
+    return 'CF-RAILGUN' in this.headers;
   };
 
   Request.prototype.servedOverSPDY = function () {
@@ -200,11 +200,11 @@ define(['airports'], function (airports) {
   };
 
   Request.prototype.getServerIP = function () {
-    return (this.details.ip) ? this.details.ip : '';
+    return this.details.ip ? this.details.ip : '';
   };
 
   Request.prototype.isv6IP = function () {
-    return (this.getServerIP().indexOf(':') !== -1);
+    return this.getServerIP().indexOf(':') !== -1;
   };
 
   // figure out what the page action should be based on the
@@ -259,7 +259,7 @@ define(['airports'], function (airports) {
       try {
         chrome.pageAction.setPopup({
           tabId: tabID,
-          popup: 'page_action_popup.html'
+          popup: 'page-action-popup.html'
         });
         chrome.pageAction.show(tabID);
       } catch (e) {
