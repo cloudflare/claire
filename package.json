@@ -3,7 +3,7 @@
   "description": "Browser extension for Google Chrome that shows an icon in the address bar (page action) which turns orange when the site you are browsing is served by [CloudFlare](http://www.cloudflare.com).",
   "license": "BSD-3-Clause",
   "dependencies": {
-    "xo": "^0.15.0"
+    "xo": "^0.16.0"
   },
   "devDependencies": {},
   "scripts": {
