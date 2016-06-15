@@ -19,11 +19,13 @@
   "homepage": "https://github.com/cloudflare/claire#readme",
   "xo": {
     "envs": [
-      "browser"
+      "browser",
+      "amd",
+      "webextensions"
     ],
-    "globals": [
-      "chrome"
-    ],
+    "rules": {
+      "import/no-amd": 0
+    },
     "ignores": [
       "source/{airports,jquery-1.9.1.min,require}.js"
     ],

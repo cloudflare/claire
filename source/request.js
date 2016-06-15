@@ -1,4 +1,3 @@
-/* global define */
 define(['airports'], function (airports) {
   'use strict';
 
@@ -96,7 +95,7 @@ define(['airports'], function (airports) {
     var messages = [];
 
     for (var flagKey in railgunFlags) {
-      if (railgunFlags.hasOwnProperty(flagKey)) {
+      if (Object.prototype.hasOwnProperty.call(railgunFlags, flagKey)) {
         var flag = railgunFlags[flagKey];
         if ((flagsBitset & flag.position) !== 0) {
           messages.push(flag.message);
@@ -129,10 +128,10 @@ define(['airports'], function (airports) {
 
       try {
         chrome.tabs.sendMessage(this.details.tabId, csMessageData, csMessageCallback);
-      } catch (e) {
+      } catch (err) {
         console.log('caught exception when sending message to content script');
         console.log(chrome.extension.lastError());
-        console.log(e);
+        console.log(err);
       }
     }
   };
@@ -262,8 +261,8 @@ define(['airports'], function (airports) {
           popup: 'page-action-popup.html'
         });
         chrome.pageAction.show(tabID);
-      } catch (e) {
-        console.log('Exception on page action show for tab with ID: ', tabID, e);
+      } catch (err) {
+        console.log('Exception on page action show for tab with ID: ', tabID, err);
       }
     });
   };
