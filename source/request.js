@@ -29,6 +29,16 @@ define(['airports'], function (airports) {
     if ('CF-RAILGUN' in this.headers) {
       this.processRailgunHeader();
     }
+
+    if ('X-FIREFOX-SPDY' in this.headers) {
+      this.processFirefoxSpdyHeader();
+    }
+  };
+
+  Request.prototype.processFirefoxSpdyHeader = function () {
+    this.hasConnectionInfo = true;
+    this.SPDY = true;
+    this.connectionType = (this.headers['X-FIREFOX-SPDY'] === 'h2') ? 'h2' : 'spdy';
   };
 
   Request.prototype.processRailgunHeader = function () {
