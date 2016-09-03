@@ -31,7 +31,7 @@
 
     $('#ip').val(request.getServerIP());
 
-    $('#claireInfoImage img').attr('src', request.getPopupPath());
+    $('#claireInfoImage img').attr('src', request.getPopupPath() + '.png');
 
     // show the Ray ID & location
     if (request.servedByCloudFlare()) {

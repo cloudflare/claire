@@ -239,7 +239,7 @@ define(['airports'], function (airports) {
       iconPathParts.push('rg');
     }
 
-    return basePath + iconPathParts.join('-') + '.png';
+    return basePath + iconPathParts.join('-');
   };
 
   Request.prototype.setConnectionInfo = function (connectionInfo) {
@@ -253,7 +253,10 @@ define(['airports'], function (airports) {
     var tabID = this.details.tabId;
     chrome.pageAction.setIcon({
       tabId: this.details.tabId,
-      path: iconPath
+      path: {
+        19: iconPath + '.png',
+        38: iconPath + '@2x.png'
+      }
     }, function () {
       try {
         chrome.pageAction.setPopup({
