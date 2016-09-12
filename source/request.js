@@ -145,10 +145,6 @@ define(['airports'], function (airports) {
     return 'CF-RAILGUN' in this.headers;
   };
 
-  Request.prototype.servedOverSPDY = function () {
-    return this.SPDY && this.connectionType.match(/^spdy/);
-  };
-
   Request.prototype.servedOverH2 = function () {
     return this.SPDY && this.connectionType === 'h2';
   };
@@ -225,9 +221,7 @@ define(['airports'], function (airports) {
       iconPathParts.push('off');
     }
 
-    if (this.servedOverSPDY()) {
-      iconPathParts.push('spdy');
-    } else if (this.servedOverH2()) {
+    if (this.servedOverH2()) {
       iconPathParts.push('h2');
     }
 
