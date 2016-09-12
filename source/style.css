@@ -65,3 +65,8 @@ button.octicon {
   height: 25px!important;
   border-radius: 4px 0px 0px 4px!important;
 }
+
+/* Hack */
+.claire-bg {
+  background-color: #fff;
+}
