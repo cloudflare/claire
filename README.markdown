@@ -1,6 +1,7 @@
-# Claire
+<img src="https://github.com/cloudflare/claire/raw/master/screenshot_readme.png" align="right" width="352">
+# Claire 
 
-Browser extension for Google Chrome that shows an icon in the address bar (page action) which turns orange when the site you are browsing is served by [CloudFlare](http://www.cloudflare.com).
+Browser extension for Google Chrome that shows an icon to the right of the address bar (browser action) which turns orange when the site you are browsing is served by [Cloudflare](https://www.cloudflare.com).
 
 Clicking on the icon in the browser will show additional information about the request.
 
