@@ -2,12 +2,17 @@
   "name": "claire",
   "description": "Browser extension for Google Chrome that shows an icon in the address bar (page action) which turns orange when the site you are browsing is served by [CloudFlare](http://www.cloudflare.com).",
   "license": "BSD-3-Clause",
-  "dependencies": {
-    "xo": "^0.16.0"
+  "dependencies": {},
+  "devDependencies": {
+    "eslint": "^3.13.1",
+    "eslint-config-xo-space": "^0.15.0",
+    "eslint-formatter-pretty": "^1.1.0",
+    "eslint-plugin-no-use-extend-native": "^0.3.12",
+    "eslint-plugin-promise": "^3.4.0",
+    "eslint-plugin-unicorn": "^1.0.0"
   },
-  "devDependencies": {},
   "scripts": {
-    "test": "xo"
+    "test": "eslint --format=node_modules/eslint-formatter-pretty --ignore-pattern source/airports.js --ignore-pattern source/jquery-1.9.1.min.js --ignore-pattern require.js source"
   },
   "repository": {
     "type": "git",
@@ -17,18 +22,17 @@
     "url": "https://github.com/cloudflare/claire/issues"
   },
   "homepage": "https://github.com/cloudflare/claire#readme",
-  "xo": {
-    "envs": [
-      "browser",
-      "amd",
-      "webextensions"
-    ],
-    "rules": {
-      "import/no-amd": 0
+  "eslintConfig": {
+    "env": {
+      "browser": true,
+      "amd": true,
+      "webextensions": true
     },
-    "ignores": [
-      "source/{airports,jquery-1.9.1.min,require}.js"
+    "plugins": [
+      "no-use-extend-native",
+      "promise",
+      "unicorn"
     ],
-    "space": true
+    "extends": "xo-space"
   }
 }
