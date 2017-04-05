@@ -1,33 +1,33 @@
 {
-    "name": "Claire",
-    "description": "Shows an orange cloud in the omnibar when you are browsing a site that uses CloudFlare",
-    "version": "0.9.1",
-    "manifest_version": 2,
-    "icons": {
-        "128": "images/orange-cloud-128.png",
-        "48": "images/orange-cloud-48.png",
-        "16": "images/orange-cloud-16.png"
-    },
-    "permissions": [
-                        "tabs",
-                        "clipboardWrite",
-                        "webNavigation",
-                        "webRequest",
-                        "http://*/",
-                        "https://*/"
-                   ],
-    "background": {
-        "page": "background.html",
-        "persistent": true
-    },
-    "page_action": {
-        "default_title": "CloudFlare"
-    },
-    "content_scripts": [{
-                            "matches": ["<all_urls>"],
-                            "js" : ["contentscript.js"],
-                            "run_at": "document_start"
-                        }],
-    "options_page": "options.html",
-    "content_security_policy": "object-src 'self'; script-src 'self' 'unsafe-eval';"
+  "name": "Claire",
+  "description": "Shows an orange cloud in the omnibar when you are browsing a site that uses Cloudflare",
+  "version": "0.9.1",
+  "manifest_version": 2,
+  "icons": {
+    "128": "images/orange-cloud-128.png",
+    "48": "images/orange-cloud-48.png",
+    "16": "images/orange-cloud-16.png"
+  },
+  "permissions": [
+    "tabs",
+    "clipboardWrite",
+    "webNavigation",
+    "webRequest",
+    "http://*/",
+    "https://*/"
+  ],
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": true
+  },
+  "page_action": {
+    "default_title": "Cloudflare"
+  },
+  "content_scripts": [{
+    "matches": ["<all_urls>"],
+    "js" : ["contentscript.js"],
+    "run_at": "document_start"
+  }],
+  "options_page": "options.html",
+  "content_security_policy": "object-src 'self'; script-src 'self' 'unsafe-eval';"
 }

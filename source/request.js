@@ -1,4 +1,4 @@
-define(['airports'], function (airports) {
+define(['./airports'], function (airports) {
   'use strict';
 
   // the Request object, contains information about a request

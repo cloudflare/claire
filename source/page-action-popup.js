@@ -1,6 +1,7 @@
+var $ = require('jquery');
+
 (function () {
   'use strict';
-  /* global $ */
   // get the current tab's ID and extract request info
   // from the extension object
   var queryInfo = {

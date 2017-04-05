@@ -1,6 +1,6 @@
 // Claire
 /* global define */
-define(['request'], function (Request) {
+define(['./request'], function (Request) {
   'use strict';
 
   // a mapping of tab IDs to window.requests

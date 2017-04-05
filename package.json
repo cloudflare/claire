@@ -2,16 +2,21 @@
   "name": "claire",
   "description": "Browser extension for Google Chrome that shows an icon in the address bar (page action) which turns orange when the site you are browsing is served by [CloudFlare](http://www.cloudflare.com).",
   "license": "BSD-3-Clause",
-  "dependencies": {},
+  "dependencies": {
+    "jquery": "^3.1.1"
+  },
   "devDependencies": {
     "eslint": "^3.13.1",
     "eslint-config-xo-space": "^0.15.0",
     "eslint-formatter-pretty": "^1.1.0",
     "eslint-plugin-no-use-extend-native": "^0.3.12",
     "eslint-plugin-promise": "^3.4.0",
-    "eslint-plugin-unicorn": "^1.0.0"
+    "eslint-plugin-unicorn": "^1.0.0",
+    "rimraf": "^2.5.4",
+    "webpack": "^2.2.0"
   },
   "scripts": {
+    "build": "rimraf dist && webpack && cp -R source/{manifest.json,style.css,page-action-popup.html,options.html,images} dist/",
     "test": "eslint --format=node_modules/eslint-formatter-pretty --ignore-pattern source/airports.js --ignore-pattern source/jquery-1.9.1.min.js --ignore-pattern require.js source"
   },
   "repository": {
