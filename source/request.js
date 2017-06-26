@@ -138,7 +138,7 @@ define(['./airports'], function (airports) {
 
   // check if the server header matches 'cloudflare-nginx'
   Request.prototype.servedByCloudFlare = function () {
-    return ('SERVER' in this.headers) && (this.headers.SERVER === 'cloudflare-nginx');
+    return ('SERVER' in this.headers) && (/^cloudflare/i.test(this.headers.SERVER));
   };
 
   Request.prototype.servedByRailgun = function () {
