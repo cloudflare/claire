@@ -1,6 +1,12 @@
 // when asked tell the extension about the SPDY/HTTP2 status of current page
 
 function determineConnectionInfo() {
+  if (chrome.loadTimes === undefined) {
+    return {
+      spdy: false,
+      type: ''
+    };
+  }
   var loadTimes = chrome.loadTimes();
   return {
     spdy: loadTimes.wasFetchedViaSpdy,
