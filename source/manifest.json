@@ -28,6 +28,9 @@
     "js" : ["contentscript.js"],
     "run_at": "document_start"
   }],
-  "options_page": "options.html",
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": true
+  },
   "content_security_policy": "object-src 'self'; script-src 'self' 'unsafe-eval';"
 }
