@@ -1,4 +1,4 @@
-(function () {
+function run() {
   'use strict';
   var debugLogCheckbox = document.getElementById('debug_log_checkbox');
 
@@ -20,5 +20,10 @@
   };
 
   claireGuideCheckbox.onclick = claireGuideClicked;
-})();
+}
 
+module.exports.run = run;
+
+if (require.main === module) {
+  run();
+}

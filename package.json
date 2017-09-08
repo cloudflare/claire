@@ -9,15 +9,17 @@
     "eslint": "^3.13.1",
     "eslint-config-xo-space": "^0.15.0",
     "eslint-formatter-pretty": "^1.1.0",
+    "eslint-plugin-jest": "^21.0.2",
     "eslint-plugin-no-use-extend-native": "^0.3.12",
     "eslint-plugin-promise": "^3.4.0",
     "eslint-plugin-unicorn": "^1.0.0",
+    "jest": "^20.0.4",
     "rimraf": "^2.5.4",
     "webpack": "^2.2.0"
   },
   "scripts": {
     "build": "rimraf dist && webpack && cp -R source/{manifest.json,style.css,page-action-popup.html,options.html,images} dist/",
-    "test": "eslint --format=node_modules/eslint-formatter-pretty --ignore-pattern source/airports.js --ignore-pattern source/jquery-1.9.1.min.js --ignore-pattern require.js source"
+    "test": "eslint --format=node_modules/eslint-formatter-pretty --ignore-pattern source/airports.js source && jest"
   },
   "repository": {
     "type": "git",
@@ -31,13 +33,18 @@
     "env": {
       "browser": true,
       "amd": true,
-      "webextensions": true
+      "webextensions": true,
+      "jest/globals": true
     },
     "plugins": [
       "no-use-extend-native",
       "promise",
-      "unicorn"
+      "unicorn",
+      "jest"
     ],
-    "extends": "xo-space"
+    "extends": [
+      "xo-space",
+      "plugin:jest/recommended"
+    ]
   }
 }
