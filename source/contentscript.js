@@ -1,11 +1,14 @@
-// when asked tell the extension about the SPDY/HTTP2 status of current page
-
+// determineConnectionInfo returns the protocol used to connect to the first hop
+// for the first navigation event available.
 function determineConnectionInfo() {
-  var loadTimes = chrome.loadTimes();
-  return {
-    spdy: loadTimes.wasFetchedViaSpdy,
-    type: loadTimes.npnNegotiatedProtocol || loadTimes.connectionInfo
-  };
+  if (performance && performance.getEntriesByType) {
+    let entry = performance.getEntriesByType('navigation')[0];
+    let proto = entry && entry.nextHopProtocol;
+
+    return {
+      type: proto
+    };
+  }
 }
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {

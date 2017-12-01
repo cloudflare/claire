@@ -9,11 +9,9 @@ var Request = function (details) {
     // headers will be stored as name: value pairs (all names will be upper case)
   this.headers = {};
 
-    // weather the request object knows about the SPDY status or not
     // this status is available in the context of the page, requires message passing
     // from the extension to the page
   this.hasConnectionInfo = false;
-  this.SPDY = false;
   this.connectionType = null;
 
   this.preProcessHeaders();
@@ -116,7 +114,8 @@ Request.prototype.queryConnectionInfoAndSetIcon = function () {
       action: 'check_connection_info'
     };
     var csMessageCallback = function (csMsgResponse) {
-        // stop and return if we don't get a response, happens with hidden/background tabs
+      // stop and return if we don't get a response, happens with background tabs,
+      // or if the next hop information is unavailable.
       if (typeof csMsgResponse === 'undefined') {
         return;
       }
@@ -146,7 +145,7 @@ Request.prototype.servedByRailgun = function () {
 };
 
 Request.prototype.servedOverH2 = function () {
-  return this.SPDY && this.connectionType === 'h2';
+  return this.connectionType === 'h2';
 };
 
 Request.prototype.ServedFromBrowserCache = function () {
@@ -250,7 +249,6 @@ Request.prototype.getImagePath = function (basePath) {
 
 Request.prototype.setConnectionInfo = function (connectionInfo) {
   this.hasConnectionInfo = true;
-  this.SPDY = connectionInfo.spdy;
   this.connectionType = connectionInfo.type;
 };
 
