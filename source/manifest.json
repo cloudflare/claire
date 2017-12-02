@@ -21,7 +21,9 @@
     "persistent": true
   },
   "page_action": {
-    "default_title": "Cloudflare"
+    "browser_style": true,
+    "default_title": "Cloudflare",
+    "default_popup": "popup.html"
   },
   "content_scripts": [{
     "matches": ["<all_urls>"],

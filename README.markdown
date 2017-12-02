@@ -1,5 +1,6 @@
 # Claire
 [![Chrome Web Store](https://img.shields.io/chrome-web-store/v/fgbpcgddpmjmamlibbaobboigaijnmkl.svg?style=flat-square)](https://chrome.google.com/webstore/detail/claire/fgbpcgddpmjmamlibbaobboigaijnmkl)
+[![Firefox Add-ons](https://img.shields.io/amo/v/cloudflare-claire.svg?style=flat-square)](https://addons.mozilla.org/en-US/firefox/addon/cloudflare-claire/)
 
 Claire is a Google Chrome extension that turns orange if the current page is on the [Cloudflare](https://www.cloudflare.com) network.
 Clicking on the icon will show additional information about the page.
@@ -11,6 +12,12 @@ Clicking on the icon will show additional information about the page.
 Install the pre-packaged version of Claire from the Chrome Web Store
 
 [![Chrome Web Store](https://developer.chrome.com/webstore/images/ChromeWebStore_BadgeWBorder_v2_206x58.png)](https://chrome.google.com/webstore/detail/claire/fgbpcgddpmjmamlibbaobboigaijnmkl)
+
+### From Firefox Add-ons
+
+Install the pre-packaged version of Claire from the Firefox Add-ons site
+
+[![Firefox Add-ons](https://addons.cdn.mozilla.net/static/img/addons-buttons/AMO-button_1.png)](https://addons.mozilla.org/en-US/firefox/addon/cloudflare-claire/)
 
 ### From source
 
