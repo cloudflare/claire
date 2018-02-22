@@ -1,64 +1,63 @@
-var $ = require('jquery');
+'use strict';
+// get the current tab's ID and extract request info
+// from the extension object
+var queryInfo = {
+  active: true,
+  windowId: chrome.windows.WINDOW_ID_CURRENT
+};
 
-(function () {
-  'use strict';
-  // get the current tab's ID and extract request info
-  // from the extension object
-  var queryInfo = {
-    active: true,
-    windowId: chrome.windows.WINDOW_ID_CURRENT
-  };
+if (localStorage.hide_guide === 'yes') {
+  document.getElementById('claireInfoImage').classList.add('hidden');
+}
 
-  if (localStorage.hide_guide === 'yes') {
-    $('#claireInfoImage').hide();
-  }
+document.addEventListener('click', function (evt) {
+  var $el = evt.target;
 
-  $('.copy-button').on('click', function (evt) {
-    var $el = $(this);
-    var copyId = $el.data('copyId');
-    var $copyEl = $('#' + copyId);
+  if ($el.matches('.copy-button')) {
+    var copyId = $el.dataset.copyId;
+    var $copyEl = document.getElementById(copyId);
 
     $copyEl.select();
     document.execCommand('copy');
 
     evt.preventDefault();
-  });
+    evt.stopImmediatePropagation();
+  }
+});
 
-  chrome.tabs.query(queryInfo, function (tabs) {
-    var tabID = tabs[0].id;
-    // get the extension's window object
-    var extensionWindow = chrome.extension.getBackgroundPage();
-    var request = extensionWindow.requests[tabID];
+chrome.tabs.query(queryInfo, function (tabs) {
+  var tabID = tabs[0].id;
+  // get the extension's window object
+  var extensionWindow = chrome.extension.getBackgroundPage();
+  var request = extensionWindow.requests[tabID];
 
-    $('#ip').val(request.getServerIP());
+  document.getElementById('ip').value = request.getServerIP();
+  document.querySelector('#claireInfoImage img').src = request.getPopupPath() + '.png';
 
-    $('#claireInfoImage img').attr('src', request.getPopupPath() + '.png');
+  // show the Ray ID & location
+  if (request.servedByCloudFlare()) {
+    document.getElementById('rayID').value = request.getRayID();
+    document.getElementById('locationCode').textContent = request.getCloudFlareLocationCode();
+    document.getElementById('locationName').textContent = request.getCloudFlareLocationName();
+    document.getElementById('traceURL').href = request.getCloudFlareTrace();
+  } else {
+    document.getElementById('ray').classList.add('hidden');
+    document.getElementById('loc').classList.add('hidden');
+    document.getElementById('actions').classList.add('hidden');
+  }
 
-    // show the Ray ID & location
-    if (request.servedByCloudFlare()) {
-      $('#rayID').val(request.getRayID());
-      $('#locationCode').text(request.getCloudFlareLocationCode());
-      $('#locationName').text(request.getCloudFlareLocationName());
-      $('#traceURL').attr('href', request.getCloudFlareTrace());
-    } else {
-      $('#ray').attr('hidden', true);
-      $('#loc').attr('hidden', true);
-      $('#actions').attr('hidden', true);
+  // show Railgun related info
+  if (request.servedByRailgun()) {
+    var railgunMetaData = request.getRailgunMetaData();
+    document.getElementById('railgunID').textContent = railgunMetaData.id;
+    if (!railgunMetaData.normal) {
+      document.getElementById('railgunCompression').textContent = railgunMetaData.compression;
+      document.getElementById('railgunTime').textContent = railgunMetaData.time;
     }
-
-    // show Railgun related info
-    if (request.servedByRailgun()) {
-      var railgunMetaData = request.getRailgunMetaData();
-      $('#railgunID').text(railgunMetaData.id);
-      if (!railgunMetaData.normal) {
-        $('#railgunCompression').text(railgunMetaData.compression);
-        $('#railgunTime').text(railgunMetaData.time);
-      }
-    } else {
-      $('#railgun').attr('hidden', true);
-    }
-  });
-})();
+  } else {
+    document.getElementById('railgun').classList.add('hidden');
+  }
+});
 
 if (require.main === module) {
   var style; // eslint-disable-line no-unused-vars
