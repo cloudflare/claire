@@ -34,5 +34,5 @@
     "page": "options.html",
     "open_in_tab": true
   },
-  "content_security_policy": "object-src 'self'; script-src 'self' 'unsafe-eval';"
+  "content_security_policy": "object-src 'self'; script-src 'self';"
 }
