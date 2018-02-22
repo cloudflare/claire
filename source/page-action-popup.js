@@ -59,3 +59,11 @@ var $ = require('jquery');
     }
   });
 })();
+
+if (require.main === module) {
+  var style; // eslint-disable-line no-unused-vars
+  style = require('purecss/build/pure-min.css');
+  style = require('purecss/build/grids-responsive-min.css');
+  style = require('octicons/build/font/octicons.min.css');
+  style = require('./style.css');
+}
