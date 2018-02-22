@@ -15,7 +15,7 @@
     "eslint-plugin-unicorn": "^1.0.0",
     "jest": "^20.0.4",
     "rimraf": "^2.5.4",
-    "webpack": "^2.2.0"
+    "webpack": "^3.0.0"
   },
   "scripts": {
     "build": "rimraf dist && webpack && cp -R source/{manifest.json,style.css,page-action-popup.html,options.html,images} dist/",
