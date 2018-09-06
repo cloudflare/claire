@@ -105,36 +105,6 @@ Request.prototype.processRailgunHeader = function () {
   this.railgunMetaData.messages = messages;
 };
 
-Request.prototype.queryConnectionInfoAndSetIcon = function () {
-  var tabID = this.details.tabId;
-  if (this.hasConnectionInfo) {
-    this.setPageActionIconAndPopup();
-  } else {
-    var csMessageData = {
-      action: 'check_connection_info'
-    };
-    var csMessageCallback = function (csMsgResponse) {
-      // stop and return if we don't get a response, happens with background tabs,
-      // or if the next hop information is unavailable.
-      if (typeof csMsgResponse === 'undefined') {
-        return;
-      }
-
-      var request = window.requests[tabID];
-      request.setConnectionInfo(csMsgResponse);
-      request.setPageActionIconAndPopup();
-    };
-
-    try {
-      chrome.tabs.sendMessage(this.details.tabId, csMessageData, csMessageCallback);
-    } catch (err) {
-      console.log('caught exception when sending message to content script');
-      console.log(chrome.extension.lastError());
-      console.log(err);
-    }
-  }
-};
-
   // check if the server header matches 'cloudflare-nginx'
 Request.prototype.servedByCloudFlare = function () {
   return ('SERVER' in this.headers) && (/^cloudflare/i.test(this.headers.SERVER));

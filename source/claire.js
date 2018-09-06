@@ -35,24 +35,11 @@ define(['./request'], function (Request) {
     }
   });
 
-  chrome.webNavigation.onDOMContentLoaded.addListener(function (details) {
-    if (details.frameId > 0) {
-      // we don't care about sub-frame window.requests
-      return;
-    }
-
-    if (details.tabId in window.requests) {
-      var request = window.requests[details.tabId];
-      if (!request.details.fromCache) {
-        request.queryConnectionInfoAndSetIcon();
-      }
-    }
-  });
-
   chrome.runtime.onMessage.addListener(function (csRequest, sender, sendResponse) {
     var request = window.requests[sender.tab.id];
     if (request) {
       request.setConnectionInfo(csRequest);
+      request.setPageActionIconAndPopup();
     }
     sendResponse({});
   });
