@@ -148,6 +148,14 @@ Request.prototype.servedOverH2 = function () {
   return this.connectionType === 'h2';
 };
 
+Request.prototype.getConnType = function () {
+  return this.connectionType ? this.connectionType : "Unknown";
+};
+
+Request.prototype.servedOverH3 = function () {
+  return this.connectionType === 'http/2+quic/99';
+};
+
 Request.prototype.ServedFromBrowserCache = function () {
   return this.details.fromCache;
 };
@@ -234,6 +242,10 @@ Request.prototype.getImagePath = function (basePath) {
 
   if (this.servedOverH2()) {
     iconPathParts.push('h2');
+  }
+
+  if (this.servedOverH3()) {
+    iconPathParts.push('h3');
   }
 
   if (this.isv6IP()) {
