@@ -149,7 +149,7 @@ Request.prototype.servedOverH2 = function () {
 };
 
 Request.prototype.getConnType = function () {
-  return this.connectionType ? this.connectionType : "Unknown";
+  return this.connectionType ? this.connectionType : 'Unknown';
 };
 
 Request.prototype.servedOverH3 = function () {
