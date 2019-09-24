@@ -15,6 +15,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   if (request.action === 'check_connection_info') {
     sendResponse(determineConnectionInfo());
   }
+  return true;
 });
 
 // when executed, notify the extension about the connection info

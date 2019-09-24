@@ -32,6 +32,7 @@ chrome.tabs.query(queryInfo, function (tabs) {
   var request = extensionWindow.requests[tabID];
 
   document.getElementById('ip').value = request.getServerIP();
+  document.getElementById('conn').value = request.getConnType();
   document.querySelector('#claireInfoImage img').src = request.getPopupPath() + '.png';
 
   // show the Ray ID & location
