@@ -1,3 +1,12 @@
+![Deprecated](https://img.shields.io/badge/STATUS-DEPRECATED-E81403)
+
+Successor of this extension can be found under a new name, **Optics**.
+
+[![Chrome Web Store](https://img.shields.io/chrome-web-store/v/mdjgbjnbdnhneejmmaabmccfehigbjbe.svg)](https://chrome.google.com/webstore/detail/optics/mdjgbjnbdnhneejmmaabmccfehigbjbe)
+[![Firefox Add-ons](https://img.shields.io/amo/v/cloudflare-optics.svg)](https://addons.mozilla.org/firefox/addon/cloudflare-optics/)
+
+---
+
 # Claire
 [![Chrome Web Store](https://img.shields.io/chrome-web-store/v/fgbpcgddpmjmamlibbaobboigaijnmkl.svg?style=flat-square)](https://chrome.google.com/webstore/detail/claire/fgbpcgddpmjmamlibbaobboigaijnmkl)
 [![Firefox Add-ons](https://img.shields.io/amo/v/cloudflare-claire.svg?style=flat-square)](https://addons.mozilla.org/en-US/firefox/addon/cloudflare-claire/)
