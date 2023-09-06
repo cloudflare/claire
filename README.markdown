@@ -2,7 +2,7 @@
 
 ![Deprecated](https://img.shields.io/badge/STATUS-DEPRECATED-E81403)
 
-Claire has been deprecated by **Optics**, which was launched with Manifest V3 and support for Firefox.
+Claire has been deprecated by **Optics** (https://github.com/cloudflare/optics), which was launched with Manifest V3 and support for Firefox.
 
 ## Downloads for Optics
 
